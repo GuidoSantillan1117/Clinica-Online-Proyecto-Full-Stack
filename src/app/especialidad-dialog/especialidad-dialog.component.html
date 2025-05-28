@@ -1,0 +1,11 @@
+<div class="container bg-white" >
+  <h3 class="text-center text-success"mat-dialog-title>Agregar una nueva especialidad</h3>
+  <mat-dialog-content class="text-white text-center " >
+    <input class="form-control" [(ngModel)]="especialidad" name="especialidad" type="text"> 
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button class="btn bg-danger rounded " mat-button (click)="cancelar()">Cancelar</button>
+      <button class="btn bg-success rounded" mat-raised-button color="primary" (click)="agregar()">Agregar</button>
+    </mat-dialog-actions>
+
+</div>
