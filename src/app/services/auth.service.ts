@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-// import { User } from '../clases/User'; 
+import { User } from '../clases/User';
 
 @Injectable({
   providedIn: 'root'
@@ -10,47 +10,55 @@ import { BehaviorSubject } from 'rxjs';
 export class AuthService {
 
   private _isLoggedIn = new BehaviorSubject<boolean>(false);
-  // private currentUserSubject = new BehaviorSubject<User | null>(null);
+  private loginValido = new BehaviorSubject<boolean>(false);
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
 
   isLoggedIn$ = this._isLoggedIn.asObservable();
-  // currentUser$ = this.currentUserSubject.asObservable();
+  loginValido$ = this.loginValido.asObservable();
+  currentUser$ = this.currentUserSubject.asObservable();
 
 
 
-  constructor(private supabaseService:SupabaseService,private router:Router) { 
+  constructor(private supabaseService: SupabaseService, private router: Router) {
     this.checkChange();
-    }
+  }
 
-    async loadUserFromSession() {
+  validarLogin(){
+    this.loginValido.next(true);
+  }
+  async cargarUsuario() {
+
       const { data: sessionData } = await this.supabaseService.supabase.auth.getUser();
   
       if (sessionData?.user) {
         const id = sessionData.user.id;
         const { data: userInfo } = await this.supabaseService.supabase
-          .from('users')
+          .from('usuarios_clinica')
           .select('*')
           .eq('id', id)
           .single();
-  
-        if (userInfo) {
-          // const user = new User(userInfo.id, userInfo.name, userInfo.sur_name, userInfo.age, userInfo.mail);
-          // this.currentUserSubject.next(user);
-        }
-      }
-    }
-  
-      // getCurrentUser(): User | null {
-      // return this.currentUserSubject.value;
-    // }
-  
 
-  private async checkChange(){
+    if (userInfo) {
+      const user = new User(userInfo.id_user,userInfo.id, userInfo.name, userInfo.sur_name, userInfo.age, userInfo.dni,userInfo.rol,userInfo.foto_perfil);
+      this.currentUserSubject.next(user);
+    }
+
+    }
+  }
+
+  getCurrentUser(): User | null {
+    return this.currentUserSubject.value;
+  }
+
+
+  private async checkChange() {
     this.supabaseService.supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
         this._isLoggedIn.next(true);
-        this.loadUserFromSession();
+        this.cargarUsuario();
       } else {
         this._isLoggedIn.next(false);
+        this.loginValido.next(false);
       }
     });
   }
@@ -63,10 +71,9 @@ export class AuthService {
     return await this.supabaseService.supabase.auth.signUp({ email, password });
   }
 
-  async getUser()
-  {
-    const { data} = await this.supabaseService.supabase.auth.getUser();
-    return {data}
+  async getUser() {
+    const { data } = await this.supabaseService.supabase.auth.getUser();
+    return { data }
   }
 
   async signOut() {

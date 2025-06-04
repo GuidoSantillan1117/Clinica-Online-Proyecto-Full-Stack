@@ -1,0 +1,242 @@
+<div class="container-fluid d-flex flex-column justify-content-center">
+    @if(tipoUsuario === 'paciente')
+    {
+    <div class="d-flex flex-column w-100 align-items-center justify-content-center mb-4">
+        <h2 class="text-center mb-1">Tus turnos</h2>
+    </div>
+
+    <div class="d-flex flex-column align-items-end w-100 mb-3 pe-4">
+        <div class="d-flex align-items-center gap-2 w-100" style="max-width: 400px;">
+            <input [(ngModel)]="filtroValor" name="filtroValor" type="text"
+                placeholder="Buscar por especialista o especialidad" class="form-control w-100">
+            <button [disabled]="filtro" (click)="filtrar()" class="bg-light-blue text-white px-3"
+                style="border-radius: 10px; border: none; height: 40px;">Buscar</button>
+        </div>
+        <div *ngIf="filtro" class="d-flex align-items-center mt-2 px-2 py-1 rounded"
+            style="background-color: lightblue; font-size: 14px; max-width: 400px;">
+            <span class="me-auto fw-bold">{{ filtroValorActual }}</span>
+            <i (click)="borrarFiltro()" class="bi bi-x-lg text-danger" role="button"></i>
+        </div>
+    </div>
+
+    <h4 class="mb-5 text-black" *ngIf="filtro && !noCoincide">
+        Se encontraron {{ cantidadCoincidencias }} turnos
+    </h4>
+
+
+    <h4 class="mb-5" *ngIf="filtro && !noCoincide">
+        Se encontraron {{ cantidadCoincidencias }} turnos
+    </h4>
+    <div style="background-color: rgb(131, 183, 243);height: 100%;"
+        class=" d-flex flex-column align-items-center justify-content-center border rounded my-4 p-4 ">
+
+
+        @if(!noCoincide)
+        {
+        @for(turno of turnos();track turno.id_turno)
+        {
+        <div class="d-flex flex-column justify-content-center  bg-light-blue w-50 p-5 border rounded my-3">
+            <h1 class="text-center mb-5">{{turno.especialidad}}</h1>
+            <div class="grid">
+                <div class="row fw-bold mb-4 border-bottom pb-2">
+                    <div class="col-3">Especialista</div>
+                    <div class="col-3">Fecha</div>
+                    <div class="col-3">Hora</div>
+                    <div class="col-3">Estado</div>
+                </div>
+            </div>
+            <div class="grid d-flex flex-column  ">
+                <div class="row ">
+                    <div class="col-3">{{turno.especialistas.usuarios_clinica.name}}</div>
+                    <div class="col-3"> {{turno.fecha}}</div>
+                    <div class="col-3"> {{turno.hora}}</div>
+                    <div class="col-3"> <strong>{{turno.estado}}</strong></div>
+                </div>
+            </div>
+
+            <div class="mt-5 " *ngIf="turno.diagnostico!== null && turno.boton_diagnostico_presionado ">
+                <p class="fw-bold" style="text-decoration: underline;">Diagnostico</p>
+                <p>{{turno.diagnostico}}</p>
+            </div>
+            <div class="mt-5" *ngIf="turno.comentario_especialista !== null && turno.boton_comentario_presionado ">
+                <p class="fw-bold" style="text-decoration: underline;">Comentario</p>
+                <p>Dr. {{turno.especialistas.usuarios_clinica.name}}: {{turno.comentario_especialista}}</p>
+            </div>
+            <div *ngIf="turno.estado ==='Pendiente'|| turno.estado === 'Aceptado'"
+                class="text-center mt-4 d-flex justify-content-center">
+                <button (click)="cancelarRechazarTurno(turno,true)" class="btn btn-danger mt-3">Cancelar turno</button>
+            </div>
+            <div class="text-center mt-4 d-flex justify-content-center gap-2">
+                <button *ngIf="turno.comentario_especialista !==null" (click)="abrirComentario(turno)"
+                    class="btn btn-success mt-3 p-2">
+                    {{turno.boton_comentario_presionado ? 'Ocultar comentarios': 'Ver comentarios (1)'}}
+                </button>
+                <button *ngIf="turno.diagnostico !==null " (click)="abrirDiagnostico(turno)"
+                    class="btn btn-success mt-3 p-2">
+                    {{turno.boton_diagnostico_presionado ? 'Ocultar diagnostico': 'Ver diagnostico (1)'}}
+                </button>
+
+                <div class="d-flex gap-2" *ngIf="turno.estado==='Realizado'">
+                    <button [disabled]="turno.encuesta_paciente " (click)="llenarEncuesta(turno)"
+                        class="btn btn-success mt-3 p-2">
+                        Abrir encuesta
+                    </button>
+
+                    <button [disabled]="turno.calificacion" (click)="llenarValoracion(turno)"
+                        class="btn btn-success mt-3 p-2">
+                        Enviar valoración
+                    </button>
+                </div>
+
+
+            </div>
+
+            <div></div>
+
+        </div>
+        }
+        }
+
+
+
+
+
+
+
+
+
+        @else{
+        <div class="display-flex align-items-center justify-content-center">
+            <h2 class=" ">No se encontraron turnos que coincidan con la búsqueda.</h2>
+        </div>
+        }
+    </div>
+    }
+    @else {
+
+    <div class="d-flex flex-column w-100 align-items-center justify-content-center mb-4">
+        <h2 class="text-center my-4">Tus turnos asignados</h2>
+    </div>
+
+    <div class="d-flex flex-column align-items-end w-100 mb-3 pe-4">
+        <div class="d-flex align-items-center gap-2 w-100" style="max-width: 400px;">
+            <input [(ngModel)]="filtroValor" name="filtroValor" type="text"
+                placeholder="Buscar por paciente o especialidad" class="form-control w-100">
+            <button [disabled]="filtro" (click)="filtrar()" class="bg-light-blue text-white px-3"
+                style="border-radius: 10px; border: none; height: 40px;">Buscar</button>
+        </div>
+        <div *ngIf="filtro" class="d-flex align-items-center mt-2 px-2 py-1 rounded"
+            style="background-color: lightblue; font-size: 14px; max-width: 400px;">
+            <span class="me-auto fw-bold">{{ filtroValorActual }}</span>
+            <i (click)="borrarFiltro()" class="bi bi-x-lg text-danger" role="button"></i>
+        </div>
+    </div>
+
+    <h4 class="mb-5 text-black" *ngIf="filtro && !noCoincide">
+        Se encontraron {{ cantidadCoincidencias }} turnos
+    </h4>
+    <!-- <h1 class="my-4 display-4">Mis turnos asignados</h1>
+
+    <div class="my-4">
+        <div class="d-flex align-items-center gap-2" style="max-width: 400px;">
+            <input [(ngModel)]="filtroValor" name="filtroValor" type="text"
+                placeholder="Buscar por paciente o especialidad" class="form-control w-100">
+            <button [disabled]="filtro" (click)="filtrar()" class="btn bg-danger text-white">Buscar</button>
+        </div>
+
+        <div *ngIf="filtro" class="d-flex align-items-center mt-2 px-3 py-1 rounded"
+            style="background-color: lightblue; font-size: 15px; max-width: 400px;">
+            <span class="me-auto fw-bold">{{ filtroValorActual }}</span>
+            <i (click)="borrarFiltro()" class="bi bi-x-lg text-danger" role="button"></i>
+        </div>
+    </div>
+
+    <h4 class="mb-5" *ngIf="filtro && !noCoincide">
+        Se encontraron {{ cantidadCoincidencias }} turnos
+    </h4> -->
+    <div style="background-color: rgb(131, 183, 243);height: 100%;"
+        class=" d-flex flex-column align-items-center justify-content-center border rounded my-4 p-4 ">
+
+
+        @if(!noCoincide)
+        {
+        @for(turno of turnos();track turno.id_turno)
+        {
+        <div class="d-flex flex-column justify-content-center  bg-light-blue w-50 p-5 border rounded my-3">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <p class="fw-bold"> PACIENTE: {{turno.pacientes.usuarios_clinica.name}}</p>
+                <p class="text-end fw-bold text-white">ID TURNO: {{turno.id_turno}}</p>
+
+            </div>
+            <div class="grid">
+                <div class="row fw-bold mb-4 border-bottom pb-2">
+                    <div class="col-3">Campo</div>
+                    <div class="col-3">Fecha</div>
+                    <div class="col-3">Hora</div>
+                    <div class="col-3">Estado</div>
+                </div>
+            </div>
+            <div class="grid d-flex flex-column  ">
+                <div class="row ">
+                    <div class="col-3">{{turno.especialidad}}</div>
+                    <div class="col-3"> {{turno.fecha}}</div>
+                    <div class="col-3"> {{turno.hora}}</div>
+                    <div class="col-3"> <strong>{{turno.estado}}</strong></div>
+                </div>
+            </div>
+
+            <div *ngIf="turno.encuesta_paciente && turno.boton_encuesta_presionado" class="mt-5 ">
+                <p class="fw-bold" style="text-decoration: underline;">Encuesta de satisfacción {{turno.calificacion}}/5
+                </p>
+                <p class="text-black"><strong>¿Cómo fue tu experiencia con el
+                        especialista?</strong>{{turno.encuesta_paciente.pregunta1}}</p>
+                <p class="text-black"><strong>¿Fue rapida la atención?</strong>{{turno.encuesta_paciente.pregunta2}}
+                </p>
+                <p class="text-black"><strong>¿Volverias a atenderte?</strong>{{turno.encuesta_paciente.pregunta3}}</p>
+            </div>
+            <div class="mt-5" *ngIf="turno.comentario_paciente !== null && turno.boton_comentario_presionado ">
+                <p class="fw-bold" style="text-decoration: underline;">Comentario</p>
+                <p class="text-white">{{turno.pacientes.usuarios_clinica.name}}: <span
+                        class="text-black">{{turno.comentario_paciente}}</span> </p>
+            </div>
+            <div class="text-center mt-4 d-flex justify-content-center">
+                <div *ngIf="turno.estado ==='Aceptado'" class="d-flex gap-4">
+                    <button (click)="cancelarRechazarTurno(turno,true)" class="btn btn-danger mt-3">Cancelar
+                        turno</button>
+                    <button (click)="finalizarTurno(turno)" class="btn btn-success mt-3">Finalizar turno</button>
+
+                </div>
+
+                <div *ngIf="turno.estado ==='Pendiente'" class="d-flex gap-4">
+                    <button [disabled]="turno.estado === 'Aprobado' || turno.estado ==='Rechazado'"
+                        (click)="cancelarRechazarTurno(turno,false)" class="btn btn-danger mt-3">Rechazar turno</button>
+                    <button [disabled]="turno.estado === 'Aprobado' || turno.estado ==='Rechazado'"
+                        (click)="aceptarTurno(turno)" class="btn btn-success mt-3">Aceptar turno</button>
+                </div>
+
+            </div>
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <button *ngIf="turno.comentario_paciente!==null" (click)="abrirComentario(turno)"
+                    class="btn btn-success p-2">
+                    {{turno.boton_comentario_presionado ? 'Ocultar comentarios' : 'Ver comentarios (1)'}}
+                </button>
+
+                <button *ngIf="turno.encuesta_paciente!==null" (click)="abrirEncuesta(turno)"
+                    class="btn btn-success p-2">
+                    {{turno.boton_encuesta_presionado ? 'Ocultar encuesta' : 'Ver encuesta de satisfacción'}}
+                </button>
+            </div>
+
+
+        </div>
+        }
+        }
+        @else{
+        <div class="display-flex align-items-center justify-content-center">
+            <h2 class=" ">No se encontraron turnos que coincidan con la búsqueda.</h2>
+        </div>
+        }
+    </div>
+    }
+
+</div>

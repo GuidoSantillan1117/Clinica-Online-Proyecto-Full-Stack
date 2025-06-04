@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-light-blue px-4">
+  <a class="navbar-brand" routerLink="/bienvenida">
+    <img src="/logo_azul_1.png" alt="Logo" class="logo" width="120">
+  </a>
+
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/bienvenida" routerLinkActive="active">Inicio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/mi-perfil" routerLinkActive="active">Mi perfil</a>
+      </li>
+
+      <li *ngIf="rolActual === 'administrador'" class="nav-item">
+        <a class="nav-link" routerLink="/users" routerLinkActive="active">Usuarios</a>
+      </li>
+      <li *ngIf="rolActual === 'paciente' || rolActual === 'especialista'" class="nav-item">
+        <a class="nav-link" routerLink="/mis-turnos" routerLinkActive="active">Mis turnos</a>
+      </li>
+      <li *ngIf="rolActual === 'administrador'" class="nav-item">
+        <a class="nav-link" routerLink="/turnos" routerLinkActive="active">Turnos</a>
+      </li>
+      <li *ngIf="rolActual === 'administrador' || rolActual === 'paciente'" class="nav-item">
+        <a class="nav-link" routerLink="/login" routerLinkActive="active">Solicitar turno</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" (click)="salir()">Salir</a>
+      </li>
+
+    </ul>
+  </div>
+</nav>

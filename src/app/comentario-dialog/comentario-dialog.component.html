@@ -1,0 +1,12 @@
+<div class="container bg-white">
+  <h3 class="text-center text-black m-4" mat-dialog-title>Agrega un comentario</h3>
+  <mat-dialog-content class="text-white text-center ">
+    <input style="height: 60px; width: 400px;" class="form-control" [(ngModel)]="comentario" name="comentario" type="text"[placeholder]="'Escribe tu comentario aquí...'" />
+  </mat-dialog-content>
+  <mat-dialog-actions align="center">
+    <div class="d-flex m-4" style="gap:20px; ">
+      <button class="btn bg-success rounded bg-danger" (click)="cancelar()">Cancelar</button>
+      <button class="btn bg-success rounded" mat-raised-button color="primary" (click)="enviar()">Enviar</button>
+    </div>
+  </mat-dialog-actions>
+</div>

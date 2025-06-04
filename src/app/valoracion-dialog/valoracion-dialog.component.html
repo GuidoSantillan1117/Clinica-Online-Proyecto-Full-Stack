@@ -1,0 +1,25 @@
+<div class="container bg-white ">
+    <h3 class="text-center text-black mt-4" mat-dialog-title>Envia tu valoración</h3>
+
+    <mat-dialog-content class="text-white text-center p-0 m-0">
+        <div class="d-flex justify-content-center align-items-center my-3">
+            <div class="d-flex justify-content-between gap-2">
+                <button *ngFor="let estrella of [1, 2, 3, 4, 5]" class="btn p-0 border-0 bg-transparent"
+                    [disabled]="valorado" (click)="valorar(estrella)">
+                    <i class="bi bi-star-fill text-warning fs-4"></i>
+                </button>
+            </div>
+        </div>
+
+        <p *ngIf="valorado"class="text-black">Valoracion: {{valoracion}}/5</p>
+        <input  style="width: 400px;height: 60px;"class="form-control mt-5"  [(ngModel)]="comentario" name="comentario" type="text"
+            placeholder="Escribe tu comentario" [disabled]="!valorado" />
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="center">
+        <div class="d-flex mt-3"style="gap:20px; ">
+            <button class="btn bg-success rounded bg-danger"  (click)="cancelar()">Cancelar</button>
+          <button [disabled]="!valorado"class="btn bg-success rounded" mat-raised-button color="primary" (click)="enviar()">Enviar</button>
+        </div>
+    </mat-dialog-actions>
+</div>

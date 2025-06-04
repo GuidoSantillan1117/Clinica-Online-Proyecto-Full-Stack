@@ -3,3 +3,8 @@
     color: rgb(240, 118, 118);
     font-weight: 100;
 }
+
+.select-error{
+    border: 1px solid red;
+    box-shadow: 0 0 5px red;
+}

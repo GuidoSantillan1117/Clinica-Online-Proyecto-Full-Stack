@@ -1,23 +1,83 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router ,RouterModule} from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { RegisterComponent } from '../register/register.component';
+import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DatabaseService } from '../../services/database.service';
+
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule,FormsModule,RouterModule],
-  standalone:true,
+  imports: [CommonModule, FormsModule, RouterModule, RegisterComponent, ReactiveFormsModule],
+  standalone: true,
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
 
-  mail:string;
-  password:string;
-  constructor() {
-    this.mail = "";
-    this.password ="";
 
+  formLogin: FormGroup = new FormGroup({
+    mail: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required]),
+  })
+
+  showRegister: boolean = false;
+  constructor(private supabaseAuth: AuthService, private router: Router, private snackBar: MatSnackBar, private dbService: DatabaseService) {
 
   }
+
+
+  llenarDatos(mail: string, password: string) {
+    this.formLogin.setValue({
+      mail: mail, password: password
+    });
+  }
+  openRegister() {
+    this.showRegister = !this.showRegister
+  }
+
+  async login() {
+    if (this.formLogin.valid) {
+      const { data, error } = await this.supabaseAuth.logIn(this.formLogin.value.mail, this.formLogin.value.password);
+
+      if (!error) {
+        const { data: dataEspecialista, error: errorEspecialista } =
+          await this.dbService.obtenerEstadoEspecialista(data.user?.id);
+
+        if (errorEspecialista || !dataEspecialista || dataEspecialista.estado === 'Aprobado') {
+          this.snackBar.open("Bienvenido a MediQ", '', {
+            duration: 3000,
+            panelClass: ['snackbar-bienvenido']
+          });
+          setTimeout(() => {
+            this.supabaseAuth.validarLogin();
+            this.router.navigateByUrl('/bienvenida');
+          }, 3000);
+        }
+        else if (dataEspecialista.estado === "Pendiente") {
+          this.supabaseAuth.signOut();
+          this.snackBar.open("Bienvenido, su solicitud de registro está pendiente de aprobación", '', {
+            duration: 3000,
+            panelClass: ['snackbar-bienvenido']
+          });
+        }
+        else if (dataEspecialista.estado === "Rechazado") {
+          this.supabaseAuth.signOut();
+          this.snackBar.open("Usted fue rechazado por el administrador", '', {
+            duration: 3000,
+            panelClass: ['snackbar-error']
+          });
+        }
+      } else {
+        this.snackBar.open("Credenciales inválidas", '', {
+          duration: 3000,
+          panelClass: ['snackbar-error']
+        });
+      }
+    }
+  }
+
 }

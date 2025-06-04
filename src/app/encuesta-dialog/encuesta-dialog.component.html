@@ -1,0 +1,24 @@
+<div class="container bg-white" >
+  <h3 class="text-center text-success mt-3"mat-dialog-title>Encuesta de satisfacción</h3>
+  <mat-dialog-content class="text-white  " >
+    <div class="text-black my-3">
+        <label for="respuesta1" class="form-label">¿Cómo fue tu experiencia con el especialista?</label>
+        <input class="form-control" [(ngModel)]="respuesta1" name="respuesta1" type="text"> 
+    </div>
+    <div class="text-black my-3">
+        <label for="respuesta2" class="form-label">¿Fue rapida la atención?</label>
+        <input class="form-control" [(ngModel)]="respuesta2" name="respuesta2" type="text"> 
+    </div>
+    <div class="text-black my-3">
+        <label for="respuesta3" class="form-label">¿Volverias a atenderte?</label>
+        <input class="form-control" [(ngModel)]="respuesta3" name="respuesta3" type="text"> 
+    </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <div class="d-flex"style="gap:20px;">
+            <button class="btn bg-success rounded bg-danger"  (click)="cancelar()">Cancelar</button>
+          <button class="btn bg-success rounded" mat-raised-button color="primary" (click)="enviar()">Enviar</button>
+        </div>
+    </mat-dialog-actions>
+
+</div>

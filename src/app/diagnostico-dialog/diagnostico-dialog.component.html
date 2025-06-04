@@ -1,0 +1,22 @@
+<div class="container bg-white ">
+    <h3 class="text-center text-black mt-4 "  style="text-decoration: underline;"mat-dialog-title>Diagnostico del paciente</h3>
+
+    <mat-dialog-content class="text-black  p-0 m-0">
+
+        <div class="my-4">
+            <label for="comentario" class="form-label">Ingrese las indicaciones </label>
+            <input  style="width: 400px"class="form-control "  [(ngModel)]="comentario" name="comentario" type="text" />
+        </div>
+        <div class="my-3">
+            <label for="diagnostico" class="form-label">Ingrese el diagnostico</label>
+            <input  style="width: 400px"class="form-control "  [(ngModel)]="diagnostico" name="diagnostico" type="text" />
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="center">
+        <div class="d-flex mt-3"style="gap:20px; ">
+            <button class="btn bg-success rounded bg-danger" (click)="cancelar()">Cancelar</button>
+          <button class="btn bg-success rounded" mat-raised-button color="primary" (click)="enviar()">Enviar</button>
+        </div>
+    </mat-dialog-actions>
+</div>

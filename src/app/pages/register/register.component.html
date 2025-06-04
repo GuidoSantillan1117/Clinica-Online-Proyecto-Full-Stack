@@ -1,4 +1,5 @@
-<div class="container d-flex flex-column justify-content-center bg-light-blue  align-items-center">
+<div style="background-color: rgb(205, 213, 216)"
+    class="container-fluid d-flex flex-column justify-content-center bg-grey align-items-center min-vh-100">
     <div class="d-flex justify-content-center flex-column">
         @if(!selected)
         {
@@ -10,94 +11,188 @@
         </div>
         }
         @else{
-        <h1 class="text-center">{{userType}}</h1>
+        <div class="bg-dark text-white " style="padding: 0px;margin: 0px;">
+            <h1 class="text-center">{{userType.toUpperCase()}}</h1>
+        </div>
         <div class="grid d-flex justify-content-center">
-            <div class="row" style="width: 50%;">
-                <div class="col-6 mt-3">
-                    <label class="form-label fw-bolder text-xbox-gray">Nombre</label>
-                    <input type="text" class="form-control" placeholder="Pedro" name="nombre" [(ngModel)]="nombre"
-                        required>
-                </div>
-                <div class="col-6 mt-3">
-                    <label class="form-label fw-bolder text-xbox-gray">Apellido</label>
-                    <input type="text" class="form-control" placeholder="Perez" name="mail" [(ngModel)]="apellido"
-                        required>
-                </div>
-                <div class="col-5 mt-3">
-                    <label class="form-label fw-bolder text-xbox-gray">Edad</label>
-                    <input type="number" class="form-control" placeholder="18" name="edad" [(ngModel)]="edad" required>
-                </div>
-                <div class="col-5 mt-3">
-                    <label class="form-label fw-bolder text-xbox-gray">DNI</label>
-                    <input type="number" class="form-control" name="dni" [(ngModel)]="dni" required>
-                </div>
+            <div class="row" style="width: 100%;">
+                <div [ngClass]="userType === 'administradores' ? 'col-12 d-flex flex-column align-items-center' : 'col-6'"
+                    style="border-left: 1px solid black; border-right: 1px solid black; min-height: 40vh;">
+                    <h1 class="text-center">Datos personales</h1>
+                    <form [formGroup]="formDatosPersonales" class="d-flex">
+                        <div class="grid">
+                            <div class="row">
+                                <div class="col-6 mt-3">
+                                    <label class="form-label fw-bolder">Nombre</label>
+                                    <input formControlName="nombre" type="text" class="form-control" 
+                                        name="nombre" required>
+                                    <div class="mt-1"
+                                        *ngIf="formDatosPersonales.get('nombre')?.hasError('required') && formDatosPersonales.get('nombre')?.touched">
+                                        <small class="text-danger">El nombre es obligatorio</small>
+                                    </div>
+                                    <div class="mt-1"
+                                        *ngIf="formDatosPersonales.get('nombre')?.hasError('minlength') && formDatosPersonales.get('nombre')?.touched">
+                                        <small class="text-danger">El nombre debe tener al menos 3 caracteres</small>
+                                    </div>
+                                    <div class="mt-1"
+                                        *ngIf="formDatosPersonales.get('nombre')?.hasError('maxlength') && formDatosPersonales.get('nombre')?.touched">
+                                        <small class="text-danger">El nombre no debe superar los 15 caracteres</small>
+                                    </div>
+                                </div>
+                                <div class="col-6 mt-3">
+                                    <label class="form-label fw-bolder ">Apellido</label>
+                                    <input type="text" class="form-control" name="mail"
+                                        formControlName="apellido" required>
+                                    <div class="mt-1"
+                                        *ngIf="formDatosPersonales.get('apellido')?.hasError('required') && formDatosPersonales.get('apellido')?.touched">
+                                        <small class="text-danger">El apellido es obligatorio</small>
+                                    </div>
+                                    <div class="mt-1"
+                                        *ngIf="formDatosPersonales.get('apellido')?.hasError('minlength') && formDatosPersonales.get('apellido')?.touched">
+                                        <small class="text-danger">El apellido debe tener al menos 3 caracteres</small>
+                                    </div>
+                                    <div class="mt-1"
+                                        *ngIf="formDatosPersonales.get('apellido')?.hasError('maxlength') && formDatosPersonales.get('apellido')?.touched">
+                                        <small class="text-danger">El apellido no debe superar los 15 caracteres</small>
+                                    </div>
+                                </div>
+                                <div class="col-6 mt-3">
+                                    <label class="form-label fw-bolder ">Edad</label>
+                                    <input type="number" class="form-control" name="edad" formControlName="edad"
+                                        required>
+                                    <div class="mt-1"
+                                        *ngIf="formDatosPersonales.get('edad')?.hasError('required') && formDatosPersonales.get('edad')?.touched">
+                                        <small class="text-danger">La edad es obligatoria</small>
+                                    </div>
+                                    <div class="mt-1"
+                                        *ngIf="formDatosPersonales.get('edad')?.hasError('min') && formDatosPersonales.get('edad')?.touched">
+                                        <small class="text-danger">La edad debe ser mayor de 18</small>
+                                    </div>
+                                    <div class="mt-1"
+                                        *ngIf="formDatosPersonales.get('edad')?.hasError('max') && formDatosPersonales.get('edad')?.touched">
+                                        <small class="text-danger">La edad es invalida</small>
+                                    </div>
+                                </div>
+                                <div class="col-6 mt-3">
+                                    <label class="form-label fw-bolder ">DNI</label>
+                                    <input type="text" class="form-control" name="dni" formControlName="dni"
+                                        pattern="^[0-9]{7,8}$" required>
 
-                <div *ngIf="userType ==='paciente'" class="col-12 mt-3">
-                    <label for="obraSocial" class="form-label fw-bolder text-xbox-gray">Obra social</label>
-                    <select id="obraSocial" [(ngModel)]="obraSeleccionada" class="form-select">
-                        <option value="" disabled selected>Elige una obra social</option>
-                        <option *ngFor="let obra of obrasSociales" [value]="obra">{{ obra }}</option>
-                    </select>
-                </div>
-
-
-                <div *ngIf="userType ==='especialistas'">
-                    <div class="col-8 mt-3" *ngFor="let item of especialidadesSeleccionadas; let i = index ">
-                        <label for="especialidad" class="form-label fw-bolder text-xbox-gray">
-                            {{i === 0 ? 'Especialidad'  : 'Especialidad adicional N° ' + (i)}}
-                        </label>
-                    <div class="d-flex ">
-                    <select
-                        id="especialidad"
-                        class="form-select"
-                        [(ngModel)]="especialidadesSeleccionadas[i]"
-                        (ngModelChange)="selectEspecialidad(especialidadesSeleccionadas[i], i)">
-                        <option disabled [ngValue]="null">Elige una especialidad</option>
-                        <option
-                        class="fw-bold"
-                        id="opciones"
-                        [disabled]="especialidadesSeleccionadas.includes(especialidad) && especialidad !== 'Agregar especialidades'"
-                        *ngFor="let especialidad of especialidades"
-                        [ngValue]="especialidad">
-                        {{ especialidad }}
-                        </option>
-                    </select>
-                        <i
-                            (click)="addEspecialidad()"
-                            [class.d-none]="i !== 0"
-                            style="cursor: pointer; font-size: 25px; margin-left: 5px; margin-top: 5px;"
-                            class="bi bi-plus-circle text-white">
-                        </i>
+                                    <div class="mt-1"
+                                        *ngIf="formDatosPersonales.get('dni')?.hasError('required') && formDatosPersonales.get('dni')?.touched">
+                                        <small class="text-danger">El DNI es obligatorio</small>
+                                    </div>
+                                    <div class="mt-1"
+                                        *ngIf="formDatosPersonales.get('dni')?.hasError('pattern') && formDatosPersonales.get('dni')?.touched">
+                                        <small class="text-danger">El DNI invalido</small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                    </form>
+                    <div class="my-3" style="border-top: 1px solid grey;">
+                        <h2 class="text-center my-2">Personalización</h2>
+                        <div class="grid">
+                            <div class="row">
+                                <div class="col-6 mb-2">
+                                    <label class="fw-bolder mb-2">Foto de perfil</label>
+                                    <input type="file" (change)="onFileSelected($event,'perfil',0)" accept="image/*" />
+                                    <small class="text-danger" *ngIf="errorFotoPerfil">Debe seleccionar una foto para su
+                                        ícono </small>
+                                </div>
+                                <div class="col-6" *ngIf="userType ==='pacientes'" class="d-flex flex-column">
+                                    <label class="fw-bolder mb-2 ">Foto de fondo</label>
+                                    <input type="file" (change)="onFileSelected($event,'fondo',1)" accept="image/*" />
+                                    <p class="text-danger" *ngIf="errorFotoFondo">Debe seleccionar un fondo para su
+                                        perfil </p>
+                                </div>
+                            </div>
 
+                        </div>
                     </div>
                 </div>
+                <div *ngIf="userType === 'pacientes' || userType === 'especialistas'" class="col-6"
+                    style="border-right: 1px solid black;">
+                    <h1 class="text-center">{{userType==="pacientes" ? 'Obra social' : userType ==='especialistas' ?
+                        'Especialidades' : ''}}</h1>
 
-                
-                
-                    <div class="mt-5 col-6 bg-success">
-                        <label class>Foto de perfil</label>
-                        <input type="file" (change)="onFileSelected($event,'perfil',0)" accept="image/*" />
+                    <div *ngIf="userType ==='pacientes'" class="col-12 mt-3">
+                        <label for="obraSocial" class="form-label fw-bolder text-xbox-gray mt-2">Obra social</label>
+                        <p class="text-danger" *ngIf="errorObra">Debe seleccionar una opción</p>
+                        <select id="obraSocial" [(ngModel)]="obraSeleccionada" class="form-select">
+                            <option value="" disabled selected>Elegir una obra social</option>
+                            <option *ngFor="let obra of obrasSociales" [value]="obra">{{ obra }}</option>
+                        </select>
                     </div>
-                    
-                    <div *ngIf="userType ==='Paciente'"class="mt-5 col-6 bg-success">
-                        <label class>Foto de fondo</label>
-                        <input type="file"(change)="onFileSelected($event,'fondo',1)" accept="image/*" />
-                    </div>
-                <div class="my-5">
+                    <div *ngIf="userType ==='especialistas'" class="col-12 my-4">
+                        <div *ngFor="let item of especialidadesSeleccionadas; let i = index" class="mt-2">
+                            <label for="especialidad" class="form-label fw-bolder text-xbox-gray">
+                                {{i === 0 ? 'Especialidad' : 'Especialidad adicional N° ' + (i)}}
+                            </label>
+                            <div class="d-flex ">
+                                <select id="especialidad" class="form-select"
+                                    [ngClass]="{'select-error': item === ''  && registroPresionado}"
+                                    [(ngModel)]="especialidadesSeleccionadas[i]"
+                                    (ngModelChange)="selectEspecialidad(especialidadesSeleccionadas[i], i)">
+                                    <option disabled [ngValue]="null">Elegir una especialidad</option>
+                                    <option class="fw-bold" id="opciones"
+                                        [disabled]="especialidadesSeleccionadas.includes(especialidad) && especialidad !== 'Agregar especialidades'"
+                                        *ngFor="let especialidad of especialidades" [ngValue]="especialidad">
+                                        {{ especialidad }}
+                                    </option>
+                                </select>
+                                <button [disabled]="especialidadesSeleccionadas.length === 4"
+                                    (click)="addEspecialidad()" [class.d-none]="i !== 0 "
+                                    style="cursor: pointer; font-size: 25px; margin-left: 5px; "
+                                    class=" btn bi bi-plus-circle text-white">
 
-                    <div class="mt-3">
-                        <label class="form-label fw-bolder text-xbox-gray">Correo</label>
-                        <input type="email" class="form-control" placeholder="ejemplo@gmail.com" name="mail"
-                            [(ngModel)]="mail" required>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mt-3">
-                        <label class="form-label fw-bolder text-xbox-gray">Contraseña</label>
-                        <input type="password" class="form-control" placeholder="*******" name="password"
-                            [(ngModel)]="password" required>
-                    </div>
+                </div>
+                <div class="col-12 " style="border: 1px solid black;">
+                    <h1 class="text-center">Datos de acceso</h1>
+                    <div class="d-flex flex-column justify-content-center align-items-center">
+                        <form [formGroup]="formDatosUsuario">
+                            <div class="mt-3">
+                                <label class="form-label fw-bolder text-xbox-gray ">Correo</label>
+                                <input type="email" class="form-control" placeholder="ejemplo@gmail.com" name="mail"
+                                    required formControlName="mail">
+                                <div class="mt-1"
+                                    *ngIf="formDatosUsuario.get('mail')?.hasError('required') && formDatosUsuario.get('mail')?.touched">
+                                    <small class="text-danger">El correo es obligatorio</small>
+                                </div>
+                                <div class="mt-1"
+                                    *ngIf="formDatosUsuario.get('mail')?.hasError('email') && formDatosUsuario.get('mail')?.touched">
+                                    <small class="text-danger">El correo es invalido</small>
+                                </div>
+                                <div class="mt-3">
+                                    <label class="form-label fw-bolder text-xbox-gray">Contraseña</label>
+                                    <input type="password" class="form-control" placeholder="*******" name="password"
+                                        required formControlName="password">
 
-                    <button (click)="register(userType)">Registrar</button>
+                                    <div class="mt-1"
+                                        *ngIf="formDatosUsuario.get('password')?.hasError('required') && formDatosUsuario.get('password')?.touched">
+                                        <small class="text-danger">La contraseña es obligatoria</small>
+                                    </div>
+                                    <div class="mt-1"
+                                        *ngIf="formDatosUsuario.get('password')?.hasError('minlength') && formDatosUsuario.get('password')?.touched">
+                                        <small class="text-danger">La contraseña debe tener al menos 6
+                                            caracteres</small>
+                                    </div>
+                                    <div class="mt-1" Usuario
+                                        *ngIf="formDatosUsuario.get('password')?.hasError('maxlength') && formDatosUsuario.get('password')?.touched">
+                                        <small class="text-danger">La contraseña no debe superar los 16
+                                            caracteres</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <button class="btn btn-lg  bg-white my-3"
+                            [disabled]="formDatosPersonales.invalid || formDatosUsuario.invalid"
+                            (click)="register(userType)">Registrar</button>
+                    </div>
                 </div>
             </div>
         </div>

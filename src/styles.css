@@ -6,3 +6,15 @@ body {
 .bg-light-blue{
     background-color:#004aad;
 }
+
+.snackbar-error{
+  background-color: red;
+  color:white;
+}
+
+.snackbar-bienvenido
+{
+  background-color: rgb(65, 226, 24);
+  text-align: center;
+  color:white;
+}
