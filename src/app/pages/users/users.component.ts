@@ -4,24 +4,32 @@ import { signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../clases/User';
+import { RegisterComponent } from '../register/register.component';
 
 @Component({
   selector: 'app-users',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,RegisterComponent,],
   standalone:true,
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
 })
 export class UsersComponent implements OnInit {
-
+  registroAbierto = false;
   usuarios = signal<User[]>([]);
   constructor(private dbService: DatabaseService)
   {
-
+        this.dbService.registroOpen$.subscribe(abierto=>{
+      this.registroAbierto = abierto;
+    })
   }
 
   ngOnInit(): void {
     this.traerUsers();
+  }
+
+  mostrarRegistro()
+  {
+    this.dbService.abrirRegistro();
   }
 
   async traerUsers()

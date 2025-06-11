@@ -27,8 +27,8 @@
             <div class="d-flex align-items-center gap-2 w-100" style="max-width: 400px;">
                 <input [(ngModel)]="filtroValor" name="filtroValor" type="text"
                     placeholder="Buscar por especialista o especialidad" class="form-control w-100">
-                <button [disabled]="filtro" (click)="filtrar()" class="bg-light-blue text-white px-3"
-                    style="border-radius: 10px; border: none; height: 40px;">Buscar</button>
+                <button [disabled]="filtro || filtroValor.length === 0" (click)="filtrar()" class="btn btn-light btn-m bg-light-blue text-white px-3"
+                    style="border-radius: 10px;">Buscar</button>
             </div>
             <div *ngIf="filtro" class="d-flex align-items-center mt-2 px-2 py-1 rounded"
                 style="background-color: lightblue; font-size: 14px; max-width: 400px;">
@@ -43,11 +43,11 @@
 
 
         <div class="row fw-bold text-center  border-bottom pb-2" style="border-top: 2px solid black;">
-            <div class="col-2 mt-3">Rol</div>
-            <div class="col-2 mt-3">Nombre</div>
-            <div class="col-2 mt-3">Apellido</div>
-            <div class="col-2 mt-3">DNI</div>
-            <div class="col-2 mt-3">Edad</div>
+            <div class="col-2 mt-3">ID Turno</div>
+            <div class="col-2 mt-3">Area</div>
+            <div class="col-2 mt-3">Paciente</div>
+            <div class="col-2 mt-3">Especialista asignado</div>
+            <div class="col-2 mt-3">Fecha y hora del turno</div>
             <div class="col-2 mt-3">Estado</div>
         </div>
 
@@ -58,18 +58,31 @@
                     {{turno.id_turno}}
                 </div>
                 <div class="col-2 text-center">
-                    {{ turno.pacientes.usuarios_clinica.name }}
+                    {{turno.especialidad}}
                 </div>
                 <div class="col-2 text-center ">
-                    {{ turno.pacientes.usuarios_clinica.sur_name}}
+                    {{ turno.pacientes.usuarios_clinica.name }} {{ turno.pacientes.usuarios_clinica.sur_name }} (ID:
+                    {{turno.id_paciente}})
                 </div>
                 <div class="col-2 text-center">
-                    {{ turno.especialidad}}
+                    {{ turno.especialistas.usuarios_clinica.name }} {{ turno.especialistas.usuarios_clinica.sur_name }}
+                    (ID: {{turno.id_especialista}})
                 </div>
                 <div class="col-2  text-center">
-                    {{ turno.fecha }}
+                    {{ turno.fecha }} {{ turno.hora }}
+                </div>
 
-
+                <div class="col-2 text-center">
+                    <p [ngClass]="{
+                        'text-success': turno.estado === 'Aprobado',
+                        'text-danger': turno.estado === 'Rechazado' || turno.estado === 'Cancelado',
+                        'text-warning': turno.estado === 'Pendiente'
+                        }">
+                        {{ turno.estado }}
+                    </p>
+                    <button (click)="cancelarTurno(turno)" *ngIf="turno.estado === 'Pendiente'"class="btn btn-sm btn-danger " title="Rechazar">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
                 </div>
             </div>
 

@@ -1,13 +1,24 @@
 import { Injectable } from '@angular/core';
 import { SupabaseService } from './supabase.service';
+import { BehaviorSubject } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class DatabaseService {
+  private registroOpenSubject = new BehaviorSubject<boolean>(false); 
+  registroOpen$ = this.registroOpenSubject.asObservable(); 
 
   constructor(private supabaseService: SupabaseService) {
 
+  }
+    abrirRegistro() {
+    this.registroOpenSubject.next(true);
+  }
+
+  cerrarRegistro() {
+    this.registroOpenSubject.next(false);
   }
 
   async insertSignUp(id: string | undefined, name: string, sur_name: string, age: number, dni: number, rol: string) {
@@ -213,6 +224,104 @@ export class DatabaseService {
       .eq('id_turno', id);
 
     return { error };
+  }
+
+  async cargarEspecialidades(id: string) {
+    const { data, error } = await this.supabaseService.supabase
+      .from('especialistas')
+      .select('id_especialista,especialidad_1, especialidad_2, especialidad_3, especialidad_4')
+      .eq('id', id)
+      .single();
+      
+      return { data, error };
+  }
+
+  async cargarHorarios(id:number)
+  {
+    const { data, error } = await this.supabaseService.supabase
+    .from('especialistas_horario')
+    .select('dia,hora_inicio,hora_final')
+    .eq('id_especialista',id)
+
+    return {data,error}
+  }
+
+  async filtrarDiaEspecialidad(id: string, especialidad: string) {
+    const { data, error } = await this.supabaseService.supabase
+      .from('especialistas_horario')
+      .select('dia,hora_inicio,hora_final')
+      .eq('id_especialista', id)
+      .eq('especialidad', especialidad);
+
+    return { data, error };
+  }
+
+
+  async subirHorario(especialidad:any,id_especialista:number)
+  {
+    const diaFormateado = (especialidad.dia + '').toLowerCase();
+    const { data, error } = await this.supabaseService.supabase
+    .from('especialistas_horario')
+    .insert([{id_especialista:id_especialista,dia:diaFormateado,hora_inicio:especialidad.inicio,hora_final:especialidad.final,especialidad:especialidad.valor}])
+
+    return {data,error}
+  }
+
+  async traerDatosEspecialistas(){
+    const {data,error} = await this.supabaseService.supabase.from('especialistas')
+    .select('id_especialista,id,especialidad_1,especialidad_2,especialidad_3,especialidad_4,usuarios_clinica(name,sur_name,foto_perfil)')
+    .eq('estado','Aprobado')
+
+    return {data,error}
+  }
+
+  async verificarDisponibilidad(id_especialista:number,especialidad:string,fecha:string)
+  {
+     const {data,error} = await this.supabaseService.supabase.from('turnos_clinica')
+     .select('hora')
+     .eq('id_especialista',id_especialista)
+     .eq('especialidad',especialidad)
+     .eq('fecha',fecha)
+
+     return {data,error}
+  }
+
+  async verificarDiaYaAsignado(dia:string,id_paciente:number,id_especialista:number,especialidad:string)
+  {
+     const {data} = await this.supabaseService.supabase.from('turnos_clinica')
+     .select('id_turno')
+     .eq('id_especialista',id_especialista)
+     .eq('especialidad',especialidad)
+     .eq('id_paciente',id_paciente)
+     .eq('fecha',dia)
+
+     return {data}
+  }
+
+  async traerIdPaciente(id:string)
+  {
+     const {data,error} = await this.supabaseService.supabase.from('pacientes')
+     .select('id_paciente')
+     .eq('id',id)
+     .single()
+
+     return {data,error}
+  }
+
+  async crearTurno(id_paciente:number,id_especialista:number,hora:string,fecha:string,especialidad:string)
+  {
+    const {error} = await this.supabaseService.supabase.from('turnos_clinica')
+    .insert([{id_especialista:id_especialista,id_paciente:id_paciente,especialidad:especialidad,fecha:fecha,hora:hora}])
+
+    return {error}
+  }
+
+  async traerTodosPacientes()
+  {
+      const {data,error} = await this.supabaseService.supabase.from('pacientes')
+      .select('id_paciente,id,usuarios_clinica(name,sur_name)')
+
+      return {data,error}
   }
 
 }

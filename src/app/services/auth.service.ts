@@ -39,7 +39,7 @@ export class AuthService {
           .single();
 
     if (userInfo) {
-      const user = new User(userInfo.id_user,userInfo.id, userInfo.name, userInfo.sur_name, userInfo.age, userInfo.dni,userInfo.rol,userInfo.foto_perfil);
+      const user = new User(userInfo.id_user,userInfo.id, userInfo.name, userInfo.sur_name, userInfo.age, userInfo.dni,userInfo.rol,userInfo.foto_perfil,userInfo.foto_fondo);
       this.currentUserSubject.next(user);
     }
 

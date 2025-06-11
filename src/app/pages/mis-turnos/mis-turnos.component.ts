@@ -117,9 +117,8 @@ export class MisTurnosComponent implements OnInit, OnDestroy {
         if (comentario) {
           const comentarioData = { [campo]: comentario };
           const { error } = await this.dbService.cargarComentario(turno.id_turno, comentarioData);
-          console.log(error);
+          turno.estado = estado;
         }
-        turno.estado = estado;
       });
     }
   }

@@ -18,15 +18,17 @@ import { DatabaseService } from '../../services/database.service';
 })
 export class HomeComponent {
 
-
+  registroAbierto = false;
   formLogin: FormGroup = new FormGroup({
     mail: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
   })
 
-  showRegister: boolean = false;
-  constructor(private supabaseAuth: AuthService, private router: Router, private snackBar: MatSnackBar, private dbService: DatabaseService) {
 
+  constructor(private supabaseAuth: AuthService, private router: Router, private snackBar: MatSnackBar, private dbService: DatabaseService) {
+    this.dbService.registroOpen$.subscribe(abierto=>{
+      this.registroAbierto = abierto;
+    })
   }
 
 
@@ -36,7 +38,7 @@ export class HomeComponent {
     });
   }
   openRegister() {
-    this.showRegister = !this.showRegister
+    this.dbService.abrirRegistro();
   }
 
   async login() {

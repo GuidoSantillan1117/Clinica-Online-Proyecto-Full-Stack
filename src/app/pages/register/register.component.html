@@ -1,31 +1,65 @@
-<div style="background-color: rgb(205, 213, 216)"
-    class="container-fluid d-flex flex-column justify-content-center bg-grey align-items-center min-vh-100">
-    <div class="d-flex justify-content-center flex-column">
+<div class="container-fluid d-flex flex-column p-0 m-0 " style="min-height:80vh; min-width: 40vw; ">
+    <div class="d-flex  flex-column bg-white">
         @if(!selected)
         {
-        <h1 class="text-center">Elige un tipo de usuario</h1>
-        <div class="text-center d-flex flex-column">
-            <button (click)="select('pacientes')" class="btn btn-lg bg-white mt-3 mb-3">Paciente</button>
-            <button (click)="select('especialistas')" class="btn btn-lg bg-white mt-3 mb-3">Especialista</button>
-            <button (click)="select('administradores')" class="btn btn-lg bg-white mt-3 mb-3 ">Administrador</button>
+        <div
+            class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex justify-content-center align-items-center z-3">
+            <div class="bg-white rounded-4 shadow-lg p-5" style="width: 90%; max-width: 500px;">
+                <div class="text-end mb-4">
+                    <button (click)="cerrar()"class="btn btn-link text-black p-0 pe-2" aria-label="Cerrar">
+                <i class="bi bi-x-lg fs-4"></i>
+            </button>
+                </div>
+                <h1 class="fw-bold text-center mb-3" style="color:#004aad;">Registro de Usuario</h1>
+                <p class="text-center text-secondary mb-4">
+                    Por favor, seleccione el tipo de usuario que desea registrar:
+                </p>
+
+                <div class="d-flex flex-column gap-3">
+                    <button (click)="select('pacientes')" class="btn btn-outline-primary btn-lg w-100">👤
+                        Paciente</button>
+                    <button (click)="select('especialistas')" class="btn btn-outline-primary btn-lg w-100">🩺
+                        Especialista</button>
+                    <button *ngIf="administrador"(click)="select('administradores')" class="btn btn-outline-primary btn-lg w-100">⚙️
+                        Administrador</button>
+                </div>
+            </div>
         </div>
+
+
         }
         @else{
-        <div class="bg-dark text-white " style="padding: 0px;margin: 0px;">
-            <h1 class="text-center">{{userType.toUpperCase()}}</h1>
+        <div class="bg-grey-blue text-white d-flex justify-content-between align-items-center p-2">
+            <button (click)="volver()" class="btn btn-link text-white p-0 ps-2"  aria-label="Volver">
+                <i class="bi bi-arrow-left fs-4"></i>
+            </button>
+
+            <h1 class="text-center flex-grow-1 m-0">
+                Registro de {{
+                userType === 'pacientes' ? 'paciente' :
+                userType === 'especialistas' ? 'especialista' :
+                userType === 'administradores' ? 'administrador' :
+                'usuario'
+                }}
+            </h1>
+
+            <button (click)="cerrar()"class="btn btn-link text-white p-0 pe-2" aria-label="Cerrar">
+                <i class="bi bi-x-lg fs-4"></i>
+            </button>
         </div>
-        <div class="grid d-flex justify-content-center">
+
+        <div class="grid d-flex justify-content-center ">
             <div class="row" style="width: 100%;">
                 <div [ngClass]="userType === 'administradores' ? 'col-12 d-flex flex-column align-items-center' : 'col-6'"
-                    style="border-left: 1px solid black; border-right: 1px solid black; min-height: 40vh;">
-                    <h1 class="text-center">Datos personales</h1>
+                    style="border-right: 1px solid black; min-height: 40vh;">
+                    <h2 class="text-center mt-3 " style="color:#004aad;">Datos personales</h2>
                     <form [formGroup]="formDatosPersonales" class="d-flex">
                         <div class="grid">
                             <div class="row">
                                 <div class="col-6 mt-3">
                                     <label class="form-label fw-bolder">Nombre</label>
-                                    <input formControlName="nombre" type="text" class="form-control" 
-                                        name="nombre" required>
+                                    <input formControlName="nombre" type="text" class="form-control" name="nombre"
+                                        required>
                                     <div class="mt-1"
                                         *ngIf="formDatosPersonales.get('nombre')?.hasError('required') && formDatosPersonales.get('nombre')?.touched">
                                         <small class="text-danger">El nombre es obligatorio</small>
@@ -41,8 +75,8 @@
                                 </div>
                                 <div class="col-6 mt-3">
                                     <label class="form-label fw-bolder ">Apellido</label>
-                                    <input type="text" class="form-control" name="mail"
-                                        formControlName="apellido" required>
+                                    <input type="text" class="form-control" name="mail" formControlName="apellido"
+                                        required>
                                     <div class="mt-1"
                                         *ngIf="formDatosPersonales.get('apellido')?.hasError('required') && formDatosPersonales.get('apellido')?.touched">
                                         <small class="text-danger">El apellido es obligatorio</small>
@@ -91,19 +125,19 @@
                         </div>
                     </form>
                     <div class="my-3" style="border-top: 1px solid grey;">
-                        <h2 class="text-center my-2">Personalización</h2>
+                        <h2 class="text-center my-2" style="color:#004aad;">Personalización</h2>
                         <div class="grid">
                             <div class="row">
                                 <div class="col-6 mb-2">
                                     <label class="fw-bolder mb-2">Foto de perfil</label>
                                     <input type="file" (change)="onFileSelected($event,'perfil',0)" accept="image/*" />
                                     <small class="text-danger" *ngIf="errorFotoPerfil">Debe seleccionar una foto para su
-                                        ícono </small>
+                                        perfil </small>
                                 </div>
                                 <div class="col-6" *ngIf="userType ==='pacientes'" class="d-flex flex-column">
-                                    <label class="fw-bolder mb-2 ">Foto de fondo</label>
+                                    <label class="fw-bolder mb-2 ">Banner</label>
                                     <input type="file" (change)="onFileSelected($event,'fondo',1)" accept="image/*" />
-                                    <p class="text-danger" *ngIf="errorFotoFondo">Debe seleccionar un fondo para su
+                                    <p class="text-danger" *ngIf="errorFotoFondo">Debe seleccionar un banner para su
                                         perfil </p>
                                 </div>
                             </div>
@@ -111,11 +145,10 @@
                         </div>
                     </div>
                 </div>
-                <div *ngIf="userType === 'pacientes' || userType === 'especialistas'" class="col-6"
-                    style="border-right: 1px solid black;">
-                    <h1 class="text-center">{{userType==="pacientes" ? 'Obra social' : userType ==='especialistas' ?
-                        'Especialidades' : ''}}</h1>
-
+                <div *ngIf="userType === 'pacientes' || userType === 'especialistas'" class="col-6">
+                    <h2 style="color:#004aad;" class="text-center mt-3">{{userType==="pacientes" ? 'Obra social' :
+                        userType ==='especialistas' ?
+                        'Especialidades' : ''}}</h2>
                     <div *ngIf="userType ==='pacientes'" class="col-12 mt-3">
                         <label for="obraSocial" class="form-label fw-bolder text-xbox-gray mt-2">Obra social</label>
                         <p class="text-danger" *ngIf="errorObra">Debe seleccionar una opción</p>
@@ -151,14 +184,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 " style="border: 1px solid black;">
-                    <h1 class="text-center">Datos de acceso</h1>
+                <div class="col-12 bg-grey-blue">
+                    <h2 class="text-center text-white mt-3 fw-bold">Datos de acceso</h2>
                     <div class="d-flex flex-column justify-content-center align-items-center">
                         <form [formGroup]="formDatosUsuario">
                             <div class="mt-3">
-                                <label class="form-label fw-bolder text-xbox-gray ">Correo</label>
-                                <input type="email" class="form-control" placeholder="ejemplo@gmail.com" name="mail"
-                                    required formControlName="mail">
+                                <label class="form-label fw-bold text-white ">Correo</label>
+                                <input type="email" class="form-control" name="mail" placeholder="usuario@gmail.com" formControlName="mail">
                                 <div class="mt-1"
                                     *ngIf="formDatosUsuario.get('mail')?.hasError('required') && formDatosUsuario.get('mail')?.touched">
                                     <small class="text-danger">El correo es obligatorio</small>
@@ -168,9 +200,9 @@
                                     <small class="text-danger">El correo es invalido</small>
                                 </div>
                                 <div class="mt-3">
-                                    <label class="form-label fw-bolder text-xbox-gray">Contraseña</label>
-                                    <input type="password" class="form-control" placeholder="*******" name="password"
-                                        required formControlName="password">
+                                    <label class="form-label fw-bolder text-white">Contraseña</label>
+                                    <input type="password" placeholder="********"  class="form-control" name="password" required
+                                        formControlName="password">
 
                                     <div class="mt-1"
                                         *ngIf="formDatosUsuario.get('password')?.hasError('required') && formDatosUsuario.get('password')?.touched">
@@ -189,7 +221,7 @@
                                 </div>
                             </div>
                         </form>
-                        <button class="btn btn-lg  bg-white my-3"
+                        <button class="btn  bg-white btn-lg   my-3"
                             [disabled]="formDatosPersonales.invalid || formDatosUsuario.invalid"
                             (click)="register(userType)">Registrar</button>
                     </div>

@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
+import { ComentarioDialogComponent } from '../../comentario-dialog/comentario-dialog.component';
 
 @Component({
   selector: 'app-turnos',
@@ -37,17 +38,17 @@ export class TurnosComponent {
   }
 
   async traerTurnos() {
-    
+
     const { data, error } = await this.dbService.cargarTurnos();
     console.log(error)
     if (!error && data) {
       this.turnos.set(data);
     }
-  
+
   }
 
 
-    filtrar() {
+  filtrar() {
     const filtrados = [];
     const filtrado = this.filtroValor
 
@@ -55,8 +56,8 @@ export class TurnosComponent {
     this.filtroValorActual = filtrado;
 
     for (let turno of this.turnos()) {
-   
-      if (turno.pacientes.usuarios_clinica.name.toLocaleLowerCase() === filtrado.toLocaleLowerCase() || turno.especialidad.toLocaleLowerCase() === filtrado.toLocaleLowerCase()) {
+
+      if (turno.especialistas.usuarios_clinica.name.toLocaleLowerCase() === filtrado.toLocaleLowerCase() || turno.especialidad.toLocaleLowerCase() === filtrado.toLocaleLowerCase()) {
         filtrados.push(turno);
       }
 
@@ -76,6 +77,23 @@ export class TurnosComponent {
     this.filtroValorActual = "";
     this.filtroValor = '';
     this.noCoincide = false;
+  }
+
+  async cancelarTurno(turno: any) {
+    const { error } = await this.dbService.modificarEstadoTurno(turno.id_turno, 'Cancelado');
+    if (!error) {
+      const comentarioDialog = this.matDialog.open(ComentarioDialogComponent, {
+        disableClose: true
+      });
+
+      comentarioDialog.afterClosed().subscribe(comentario => {
+        if (comentario) {
+          const comentarioData = { 'comentario_especialista': comentario };
+          this.dbService.cargarComentario(turno.id_turno, comentarioData);
+          turno.estado = 'Cancelado';
+        }
+      });
+    }
   }
 }
 

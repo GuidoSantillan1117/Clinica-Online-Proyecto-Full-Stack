@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component ,Input} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -23,6 +23,9 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 
 
 export class RegisterComponent {
+
+  @Input() administrador: any;
+  registroAbierto : boolean = false;
   userType: string = "";
   edad: number = 0;
   dni: string = "";
@@ -62,12 +65,28 @@ export class RegisterComponent {
 
 
   constructor(private router: Router, private matDialog: MatDialog, private dbService: DatabaseService, private supabaseAuth: AuthService, private snackBar: MatSnackBar) {
+    this.dbService.registroOpen$.subscribe(abierto=>{
+      this.registroAbierto = abierto;
+    })
 
+    
   }
 
+
+  
   select(type: string) {
     this.selected = !this.selected
     this.userType = type;
+  }
+
+  volver()
+  {
+    this.selected = false;
+  }
+
+  cerrar()
+  {
+    this.dbService.cerrarRegistro();
   }
 
   verificarFotos() {
@@ -195,11 +214,11 @@ export class RegisterComponent {
           this.supabaseAuth.logIn(this.formDatosUsuario.value.mail, this.formDatosUsuario.value.password);
           this.snackBar.open("Usuario creado correctamente. Bienvenido a MediQ", '', {
             duration: 3000,
-            panelClass: ['snackbar']
+            panelClass: ['snackbar-bienvenido']
           });
           setTimeout(() => {
-            this.router.navigateByUrl('/bienvenida');
-          }, 3200);
+            this.cerrar();
+          }, 1500);
 
         }
       }

@@ -1,5 +1,10 @@
-<div class="container-fluid d-flex justify-content-center align-items-center min-vh-100 bg-xbox-dark font-inter shadow-lg"
-    style="background-color: rgb(205, 213, 216);">
+<div *ngIf="registroAbierto"class="mdl-overlay">
+    <div class="mdl-content">
+        <app-register [administrador]="false"></app-register>
+    </div>
+</div>
+
+<div class="container-fluid d-flex justify-content-center align-items-center min-vh-100 bg-light-grey font-inter shadow-lg">
     <div class="row w-100 shadow-sm" style="max-width: 1200px; overflow: hidden; border-radius: 15px;">
         <!-- Izquierda -->
         <div class="col-12 col-lg-6 bg-light-blue p-0 ">
@@ -77,11 +82,6 @@
     </div>
 </div>
 
-<ng-container *ngIf="showRegister">
-    <div class="modal-content W-50 H-50">
-        <app-register></app-register>
-    </div>
-</ng-container>
 
 <!-- * Botones de Acceso rápido
 - Debe ser botones favbutton

@@ -7,9 +7,10 @@ export class User{
     dni:number;
     rol:string;
     foto_perfil: string;
+    foto_fondo : string;
     estado : string;
     
-    constructor(id_user:number,id: string, name: string, sur_name: string, age: number, dni:number,rol:string,foto_perfil:string) {
+    constructor(id_user:number,id: string, name: string, sur_name: string, age: number, dni:number,rol:string,foto_perfil:string,fondo?:string) {
         this.id_user = id_user;
         this.id = id;
         this.nombre = name;
@@ -19,6 +20,8 @@ export class User{
         this.rol = rol;
         this.foto_perfil = foto_perfil;
         this.estado = "---"; 
+        this.foto_fondo = fondo ? fondo : "/fondo_default.jpg";
+                
 
     }
 }
