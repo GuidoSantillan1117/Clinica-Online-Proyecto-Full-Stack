@@ -4,7 +4,6 @@ import { NavbarComponent } from "./navegacion/navbar/navbar.component";
 import { AuthService } from './services/auth.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
-
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, NavbarComponent, CommonModule],

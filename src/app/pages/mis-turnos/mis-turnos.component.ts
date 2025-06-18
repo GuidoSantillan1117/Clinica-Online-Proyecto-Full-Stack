@@ -138,8 +138,10 @@ export class MisTurnosComponent implements OnInit, OnDestroy {
 
       diagnosticoDialog.afterClosed().subscribe(async dataDiagnostico => {
         if (dataDiagnostico) {
+          console.log(dataDiagnostico.datosExtra)
           await this.dbService.cargarComentario(turno.id_turno, {'comentario_especialista': dataDiagnostico.comentario});
           await this.dbService.cargarDiagnostico(turno.id_turno, dataDiagnostico);
+          await this.dbService.cargarDatos(turno.id_turno,dataDiagnostico.altura,dataDiagnostico.peso,dataDiagnostico.temperatura,dataDiagnostico.presion,dataDiagnostico.datosExtra)
           turno.diagnostico = dataDiagnostico.diagnostico;
           turno.comentario_especialista = dataDiagnostico.comentario;
           turno.estado = 'Realizado';

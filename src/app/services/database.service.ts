@@ -122,6 +122,16 @@ export class DatabaseService {
 
   }
 
+  async obtenerIdEspecialista(id:string)
+  {
+    const {data} = await this.supabaseService.supabase.from('especialistas')
+    .select('id_especialista')
+    .eq('id',id)
+    .single()
+
+    return {data}
+  }
+
   async actualizarEstadoEspecialista(id: string, habilitado: boolean) {
     const estadoUsuario = (habilitado ? 'Aprobado' : 'Rechazado');
     const { error } = await this.supabaseService.supabase.from('especialistas')
@@ -185,6 +195,31 @@ export class DatabaseService {
     return { data: turnosModificado, error };
   }
 
+  async cargarDatos(id_turno:number,altura:any,peso:any,temperatura:any,presion:any,datosExtra:any)
+  {
+    const {data,error} = await this.supabaseService.supabase.from('turnos_datos')
+    .insert([{id_turno:id_turno,altura:altura,peso:peso,temperatura:temperatura,presion:presion}])
+    if(!error)
+    {
+      console.log(error)
+      const camposExtras:any = {};
+      let index = 1;
+      for(let grupo of datosExtra)
+      {
+        const clave = grupo.clave
+        const valor = grupo.valor
+        camposExtras[`dato_${index}`] = { clave, valor };
+        index++
+        
+        const {error:errorT}= await this.supabaseService.supabase.from('turnos_datos')
+        .update(camposExtras)
+        .eq('id_turno',id_turno)
+
+        console.log(errorT)
+      }
+    }
+
+  }
   async cargarComentario(id: number, comentarioData: any) {
     const { error } = await this.supabaseService.supabase
       .from('turnos_clinica')
@@ -322,6 +357,97 @@ export class DatabaseService {
       .select('id_paciente,id,usuarios_clinica(name,sur_name)')
 
       return {data,error}
+  }
+
+  async cargarHistorialClinicoPaciente(id:string)
+  {
+    const {data:dataId} = await this.traerIdPaciente(id)
+
+    const {data,error} = await this.supabaseService.supabase.from('turnos_clinica')
+    .select('id_turno,especialidad,comentario_especialista,diagnostico,fecha,turnos_datos(altura,peso,temperatura,presion,dato_1,dato_2,dato_3)')
+    .eq('id_paciente',dataId?.id_paciente)
+    .eq('estado','Realizado')
+
+    return {data,error}
+
+  }
+
+
+async cargarEspecialistasAtendidos(id:string)
+{
+
+  const {data} = await this.traerIdPaciente(id);
+
+  const {data:dataTurno} = await this.supabaseService.supabase.from('turnos_clinica')
+  .select('id_especialista,especialistas(id,usuarios_clinica(name,sur_name))')
+  .eq('id_paciente',data!.id_paciente)
+
+  return {dataTurno};
+  
+}
+async cargarPacientesAtendidos(filtrarPorEspecialista: boolean,id?: string,) {
+  let idEspecialista = null;
+  if(id)
+  {
+    
+    const { data: dataEspecialista } = await this.obtenerIdEspecialista(id);
+    idEspecialista = dataEspecialista?.id_especialista
+
+  }
+
+  let query = this.supabaseService.supabase
+    .from('turnos_clinica')
+    .select('id_paciente,id_especialista,pacientes(id,usuarios_clinica(name,sur_name,foto_perfil))')
+    .eq('estado', 'Realizado');
+
+  if (filtrarPorEspecialista && idEspecialista) {
+    query = query.eq('id_especialista', idEspecialista);
+  }
+
+  const { data, error } = await query;
+
+  return { data, error };
+}
+
+  async cargarHistorialClinicoPacienteEspecialista(filtrarPorEspecialista: boolean,id_paciente:number,id?:string)
+  {
+
+      let idEspecialista = null;
+  if(id)
+  {
+    
+    const { data: dataEspecialista } = await this.obtenerIdEspecialista(id);
+    idEspecialista = dataEspecialista?.id_especialista
+  }
+
+    let query =  this.supabaseService.supabase.from('turnos_clinica')
+    .select('id_turno,especialidad,comentario_paciente,diagnostico,fecha,turnos_datos(altura,peso,temperatura,presion,dato_1,dato_2,dato_3)')
+    .eq('id_paciente',id_paciente)
+    .eq('estado','Realizado')
+    .order('fecha', { ascending: false });
+
+    if (filtrarPorEspecialista && idEspecialista) {
+    query = query.eq('id_especialista', idEspecialista);
+  }
+
+  const {data,error} = await query
+
+    return {data,error}
+  }
+
+
+  async cargarHistorialConEspecialista(id:string,id_especialista:number){
+    const {data:dataPaciente} = await this.traerIdPaciente(id);
+
+    const {data,error} = await this.supabaseService.supabase.from('turnos_clinica')
+    .select('id_turno,especialidad,comentario_especialista,diagnostico,fecha,turnos_datos(altura,peso,temperatura,presion,dato_1,dato_2,dato_3)')
+    .eq('estado','Realizado')
+    .eq('id_paciente',dataPaciente?.id_paciente)
+    .eq('id_especialista',id_especialista)
+
+    return {data}
+
+
   }
 
 }

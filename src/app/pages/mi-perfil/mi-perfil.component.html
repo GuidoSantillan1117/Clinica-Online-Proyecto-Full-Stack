@@ -1,62 +1,107 @@
-<div class="container-fluid  m-0 p-0 p-5 bg-light-grey ">
-    <div class="border rounded bg-grey-blue p-5" style="min-height:80%">
-        <div style="height: 50%;" class="rounded d-flex align-items-center "
-            [ngStyle]="{'background-image': 'url(' + usuario?.foto_fondo + ')','background-size': 'cover','background-position': 'center','background-repeat': 'no-repeat'}">
-            <div class="p-4 " style="width: 20%;">
-                <div class="d-flex flex-column align-items-center justify-content-center text-center rounded bg-light-blue"
-                    style="height: 80%">
-                    <img class="rounded-circle w-80 h-50" [src]="usuario?.foto_perfil" alt="Foto de perfil">
-                    <h4 class="text-white text-center mt-2">{{usuario!.nombre | titlecase}} {{usuario?.apellido}}</h4>
-                    <p class="text-center text-white m-0">{{usuario?.rol | titlecase}}</p>
-                    <p class="text-center text-white mt-2">DNI: {{usuario?.dni}}</p>
-                </div>
-            </div>
-
+<div class="container-fluid m-0 p-0 p-5 bg-light-grey">
+  <div class="border rounded bg-grey-blue p-5" style="min-height: 90%">
+    
+    <div class="rounded d-flex align-items-center" style="height: 50%; background-image: url({{usuario?.foto_fondo}}); background-size: cover; background-position: center; background-repeat: no-repeat;">
+      <div class="p-4" style="width: 20%;">
+        <div class="d-flex flex-column align-items-center justify-content-center text-center rounded bg-light-blue shadow" style="height: 80%; padding: 1.5rem;">
+          <img class="rounded-circle mb-3 shadow-sm" [src]="usuario?.foto_perfil" alt="Foto de perfil" style="width: 150px; height: 180px; object-fit: cover;">
+          <h4 class="text-white mt-2">{{usuario!.nombre | titlecase}} {{usuario?.apellido}}</h4>
+          <p class="text-white mb-1">{{usuario?.rol | titlecase}}</p>
+          <p class="text-white mb-0"><strong>DNI:</strong> {{usuario?.dni}}</p>
         </div>
-        <h1 class='text-center my-4 text-white' *ngIf="usuario?.rol ==='especialista'">
-            Mis Horarios
-        </h1>
-        <div class="grid ">
-            <div class="row">
-                <div *ngFor="let especialidad of listaEspecialidadesUsuario" class="col-3 p-3">
-                    <div [ngClass]="especialidad.coincide ? 'border border-danger': 'border'" class="bg-white p-3 shadow rounded">
-                        <h4 class="text-center mb-3">{{ especialidad.valor }}</h4>
-                        <div *ngIf="especialidad.horarioSinAsignar">
-                            <label  for="dia">Día:</label>
-                            <select id="dia" class="form-select" [(ngModel)]="especialidad.dia">
-                                <option value="">Seleccione un día</option>
-                                <option *ngFor="let dia of ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']"
-                                    [value]="dia">
-                                    {{ dia }}
-                                </option>
-                            </select>
-                        </div>
+      </div>
+    </div>
 
-                        <div *ngIf="!especialidad.horarioSinAsignar">
-                            <p><strong>Día:</strong> {{ especialidad.dia }}</p>
-                            <p><strong>Desde:</strong> {{ especialidad.inicio}}</p>
-                            <p><strong>Hasta:</strong> {{ especialidad.final }}</p>
-                        </div>
+<div class="mt-5" *ngIf="mostrarHistorial">
+    <h1 class="mb-4 text-white">Historial de turnos</h1>
+    <table class="table table-dark table-bordered table-hover text-center align-middle">
+      <thead class="text-info">
+        <tr>
+          <th>Fecha</th>
+          <th>Especialidad</th>
+          <th>Diagnóstico</th>
+          <th>Comentario</th>
+          <th>Altura</th>
+          <th>Peso</th>
+          <th>Temperatura</th>
+          <th>Presión</th>
+          <th>Extra 1</th>
+          <th>Extra 2</th>
+          <th>Extra 3</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let turno of historialUsuario">
+          <td>{{ turno.fecha |titlecase }}</td>
+          <td>{{ turno.especialidad |titlecase }}</td>
+          <td>{{ turno.diagnostico |titlecase }}</td>
+          <td>{{ turno.comentario_especialista |titlecase }}</td>
+          <td>{{ turno.turnos_datos[0].altura }}</td>
+          <td>{{ turno.turnos_datos[0].peso  }}</td>
+          <td>{{ turno.turnos_datos[0].temperatura }}</td>
+          <td>{{ turno.turnos_datos[0].presion }}</td>
+          <td>{{turno.turnos_datos[0].dato_1?.clave || ''}}<br> {{turno.turnos_datos[0].dato_1?.valor || ''}}</td>
+          <td>{{turno.turnos_datos[0].dato_2?.clave || ''}}<br> {{turno.turnos_datos[0].dato_2?.valor || ''}}</td>
+          <td>{{turno.turnos_datos[0].dato_3?.clave || ''}} <br> {{turno.turnos_datos[0].dato_3?.valor || ''}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="d-flex" style="gap:20px" >
 
-                        <div *ngIf="especialidad.horarioSinAsignar">
-                            <mat-form-field appearance="fill" class="w-100">
-                                <mat-label>Desde</mat-label>
-                                <input matInput type="time" [(ngModel)]="especialidad.inicio" />
-                            </mat-form-field>
+      <button (click)="descargarPdfHistorial()"class="mt-4 btn btn-lg btn-danger text-white">Descargar historial</button>
+       <button (click)="descargarPdfFiltrado()"class="mt-4 btn btn-lg btn-danger text-white">Descargar historial por especialista</button>
+    </div>
+  </div>
+  <div class="mt-5 text-center" *ngIf="usuario?.rol === 'paciente'">
+    <button (click)="cargarHistorial()" class="btn btn-primary btn-lg shadow">{{!mostrarHistorial ?  'Ver historial clínico'  : 'Cerrar historial'}}</button>
+  </div>
+  <h1 class='text-center my-4 text-white' *ngIf="usuario?.rol ==='especialista'">
+      Mis Horarios
+  </h1>
+  <div *ngIf="usuario?.rol==='especialista'"class="grid">
+      <div class="row">
+          <div *ngFor="let especialidad of listaEspecialidadesUsuario" class="col-3 p-3">
+              <div [ngClass]="especialidad.coincide ? 'border border-danger': 'border'"
+                  class="bg-white p-3 shadow rounded">
+                  <h4 class="text-center mb-3">{{ especialidad.valor }}</h4>
+                  <div *ngIf="especialidad.horarioSinAsignar">
+                      <label for="dia">Día:</label>
+                      <select id="dia" class="form-select" [(ngModel)]="especialidad.dia">
+                          <option value="">Seleccione un día</option>
+                          <option *ngFor="let dia of ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']"
+                              [value]="dia">
+                              {{ dia }}
+                          </option>
+                      </select>
+                  </div>
+  
+                  <div *ngIf="!especialidad.horarioSinAsignar">
+                      <p><strong>Día:</strong> {{ especialidad.dia }}</p>
+                      <p><strong>Desde:</strong> {{ especialidad.inicio}}</p>
+                      <p><strong>Hasta:</strong> {{ especialidad.final }}</p>
+                  </div>
+  
+                  <div *ngIf="especialidad.horarioSinAsignar">
+                      <mat-form-field appearance="fill" class="w-100">
+                          <mat-label>Desde</mat-label>
+                          <input matInput type="time" [(ngModel)]="especialidad.inicio" />
+                      </mat-form-field>
+  
+                      <mat-form-field appearance="fill" class="w-100">
+                          <mat-label>Hasta</mat-label>
+                          <input matInput type="time" [(ngModel)]="especialidad.final" />
+                      </mat-form-field>
+                  </div>
+  
+                  <button *ngIf="especialidad.horarioSinAsignar"
+                      [disabled]="!especialidad.inicio || !especialidad.final || !especialidad.dia"
+                      (click)="subirHorario(especialidad)" class="btn btn-primary w-100 mt-2">
+                      Agregar
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
 
-                            <mat-form-field appearance="fill" class="w-100">
-                                <mat-label>Hasta</mat-label>
-                                <input matInput type="time" [(ngModel)]="especialidad.final" />
-                            </mat-form-field>
-                        </div>
-
-                        <button *ngIf="especialidad.horarioSinAsignar"
-                            [disabled]="!especialidad.inicio || !especialidad.final || !especialidad.dia"
-                            (click)="subirHorario(especialidad)" class="btn btn-primary w-100 mt-2">
-                            Agregar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>

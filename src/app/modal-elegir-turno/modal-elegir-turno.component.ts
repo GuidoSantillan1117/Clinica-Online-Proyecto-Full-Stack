@@ -26,7 +26,7 @@ export class ModalElegirTurnoComponent implements OnInit {
   tituloModal = "Seleccione una especialidad"
   especialidadElegida = "";
   seleccionEspecialidad =false;
-  seleccionUsuario = true;
+  seleccionUsuario = false;
   mostrarHorariosTurnos = false;
   mostrarDiasTurnos = false;
   listaDias: Fecha[] = [];
@@ -50,13 +50,17 @@ export class ModalElegirTurnoComponent implements OnInit {
     ngOnInit(){
     if(this.info.rol==='administrador')
       {
+        console.log("entre")
         this.tituloModal = "Seleccione un paciente"
+        this.seleccionUsuario = true;
         this.traerPacientes()
       }
       else{
-        
         this.idPaciente = this.info.id_paciente
+        this.seleccionEspecialidad = true;
     }
+
+    console.log(this.seleccionUsuario)
   }
 
   async traerPacientes()

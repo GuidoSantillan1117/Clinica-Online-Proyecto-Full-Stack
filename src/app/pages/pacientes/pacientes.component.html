@@ -1,0 +1,12 @@
+<div *ngIf="mostrarHistorial"class="mdl-overlay">
+    <div class="mdl-content">
+        <app-modal-historial [historial]="historial"(cerrar)="mostrarHistorial=false"></app-modal-historial>
+    </div>
+</div>
+<div class="container-fluid d-flex justify-content-center align-items-center">
+    @for(paciente of pacientes();track paciente.id_paciente )
+    {
+        <img [src]="paciente.pacientes.usuarios_clinica.foto_perfil" width="50px">
+        <button (click)="abrirHistorial(paciente)"class="btn btn-lg btn-light bg-light-blue">{{paciente.pacientes.usuarios_clinica.name}}</button>
+    }
+</div>

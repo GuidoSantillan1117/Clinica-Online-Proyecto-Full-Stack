@@ -5,13 +5,14 @@
         <h1 class="text-center mb-1">Tus turnos</h1>
     </div>
 
-    <div class="d-flex flex-column align-items-end w-100 mb-3 pe-4">
+    <div class="d-flex flex-column align-items-end w-100 mb-3 pe-4 ">
         <div class="d-flex align-items-center gap-2 w-100" style="max-width: 400px;">
             <input [(ngModel)]="filtroValor" name="filtroValor" type="text"
                 placeholder="Buscar por especialista o especialidad" class="form-control w-100">
-            <button [disabled]="filtro || filtroValor.length === 0" (click)="filtrar()" class="btn btn-light btn-m bg-light-blue text-white px-3"
+            <button [disabled]="filtro || filtroValor.length === 0" (click)="filtrar()"
+                class="btn btn-light btn-m bg-light-blue text-white px-3"
                 style="border-radius: 10px; border: none; height: 40px;">Buscar</button>
-                
+
         </div>
         <div *ngIf="filtro" class="d-flex align-items-center mt-2 px-2 py-1 rounded"
             style="background-color: lightblue; font-size: 14px; max-width: 400px;">
@@ -32,29 +33,32 @@
         @for(turno of turnos();track turno.id_turno)
         {
         <div class="d-flex flex-column justify-content-center  bg-light-blue w-50 p-5 border rounded my-3">
-            <h1 class="text-center mb-5">{{turno.especialidad}}</h1>
+            <h1 class="text-white text-center mb-5">{{turno.especialidad}}</h1>
             <div class="grid">
-                <div class="row fw-bold mb-4 border-bottom pb-2">
+                <div  style="font-size: 20;"class="row fw-bold mb-4 border-bottom pb-2 text-white">
                     <div class="col-3">Especialista</div>
                     <div class="col-3">Fecha</div>
                     <div class="col-3">Hora</div>
                     <div class="col-3">Estado</div>
                 </div>
             </div>
-            <div class="grid d-flex flex-column  ">
+            <div class="grid d-flex flex-column text-white ">
                 <div class="row ">
                     <div class="col-3">{{turno.especialistas.usuarios_clinica.name}}</div>
                     <div class="col-3"> {{turno.fecha}}</div>
                     <div class="col-3"> {{turno.hora}}</div>
-                    <div class="col-3"> <strong>{{turno.estado}}</strong></div>
+                    <div class="col-3" [ngClass]="{'text-warning': turno.estado === 'Pendiente', 'text-danger': turno.estado === 'Rechazado',
+                        'text-success': turno.estado === 'Aceptado' || turno.estado === 'Realizado'}">
+                        <strong>{{ turno.estado }}</strong>
+                    </div>
                 </div>
             </div>
 
-            <div class="mt-5 " *ngIf="turno.diagnostico!== null && turno.boton_diagnostico_presionado ">
+            <div class="mt-5 text-white" *ngIf="turno.diagnostico!== null && turno.boton_diagnostico_presionado ">
                 <p class="fw-bold" style="text-decoration: underline;">Diagnostico</p>
                 <p>{{turno.diagnostico}}</p>
             </div>
-            <div class="mt-5" *ngIf="turno.comentario_especialista !== null && turno.boton_comentario_presionado ">
+            <div class="mt-5 text-white" *ngIf="turno.comentario_especialista !== null && turno.boton_comentario_presionado ">
                 <p class="fw-bold" style="text-decoration: underline;">Comentario</p>
                 <p>{{turno.comentario_especialista}}</p>
             </div>
@@ -118,7 +122,8 @@
         <div class="d-flex align-items-center gap-2 w-100" style="max-width: 400px;">
             <input [(ngModel)]="filtroValor" name="filtroValor" type="text"
                 placeholder="Buscar por paciente o especialidad" class="form-control w-100">
-            <button [disabled]="filtro || filtroValor.length === 0" (click)="filtrar()" class="btn btn-light btn-m bg-light-blue text-white px-3"
+            <button [disabled]="filtro || filtroValor.length === 0" (click)="filtrar()"
+                class="btn btn-light btn-m bg-light-blue text-white px-3"
                 style="border-radius: 10px; border: none; height: 40px;">Buscar</button>
         </div>
         <div *ngIf="filtro" class="d-flex align-items-center mt-2 px-2 py-1 rounded"
@@ -131,7 +136,7 @@
     <h4 class="mb-5 text-black" *ngIf="filtro && !noCoincide">
         Se encontraron {{ cantidadCoincidencias }} turnos
     </h4>
-   
+
     <div style="background-color: rgb(131, 183, 243);height: 100%;"
         class=" d-flex flex-column align-items-center justify-content-center border rounded my-4 p-4 ">
 
@@ -140,42 +145,45 @@
         {
         @for(turno of turnos();track turno.id_turno)
         {
-        <div class="d-flex flex-column justify-content-center  bg-light-blue w-50 p-5 border rounded my-3">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex flex-column justify-content-center  bg-light-blue w-50 p-5 border rounded my-3 ">
+            <div class="text-white d-flex justify-content-between align-items-center mb-4">
                 <p class="fw-bold"> PACIENTE: {{turno.pacientes.usuarios_clinica.name}}</p>
                 <p class="text-end fw-bold text-white">ID TURNO: {{turno.id_turno}}</p>
 
             </div>
-            <div class="grid">
-                <div class="row fw-bold mb-4 border-bottom pb-2">
-                    <div class="col-3">Campo</div>
+            <div class="grid ">
+                <div style="font-size: 20px;" class="row fw-bold mb-4 border-bottom pb-2 text-white">
+                    <div class="col-3">Especialidad</div>
                     <div class="col-3">Fecha</div>
                     <div class="col-3">Hora</div>
                     <div class="col-3">Estado</div>
                 </div>
             </div>
-            <div class="grid d-flex flex-column  ">
+            <div class="grid d-flex flex-column text-white ">
                 <div class="row ">
                     <div class="col-3">{{turno.especialidad}}</div>
                     <div class="col-3"> {{turno.fecha}}</div>
                     <div class="col-3"> {{turno.hora}}</div>
-                    <div class="col-3"> <strong>{{turno.estado}}</strong></div>
+                    <div class="col-3" [ngClass]="{'text-warning': turno.estado === 'Pendiente', 'text-danger': turno.estado === 'Rechazado',
+                        'text-success': turno.estado === 'Aceptado' || turno.estado === 'Realizado'}">
+                        <strong>{{ turno.estado }}</strong>
+                    </div>
                 </div>
             </div>
 
-            <div *ngIf="turno.encuesta_paciente && turno.boton_encuesta_presionado" class="mt-5 ">
+            <div *ngIf="turno.encuesta_paciente && turno.boton_encuesta_presionado" class="mt-5 text-white">
                 <p class="fw-bold" style="text-decoration: underline;">Encuesta de satisfacción {{turno.calificacion}}/5
                 </p>
-                <p class="text-black"><strong>¿Cómo fue tu experiencia con el
+                <p class="text-white"><strong>¿Cómo fue tu experiencia con el
                         especialista?</strong>{{turno.encuesta_paciente.pregunta1}}</p>
-                <p class="text-black"><strong>¿Fue rapida la atención?</strong>{{turno.encuesta_paciente.pregunta2}}
+                <p class="text-white"><strong>¿Fue rapida la atención?</strong>{{turno.encuesta_paciente.pregunta2}}
                 </p>
-                <p class="text-black"><strong>¿Volverias a atenderte?</strong>{{turno.encuesta_paciente.pregunta3}}</p>
+                <p class="text-white"><strong>¿Volverias a atenderte?</strong>{{turno.encuesta_paciente.pregunta3}}</p>
             </div>
             <div class="mt-5" *ngIf="turno.comentario_paciente !== null && turno.boton_comentario_presionado ">
-                <p class="fw-bold" style="text-decoration: underline;">Comentario</p>
+                <p class="fw-bold text-white" style="text-decoration: underline;">Comentario</p>
                 <p class="text-white">{{turno.pacientes.usuarios_clinica.name}}: <span
-                        class="text-black">{{turno.comentario_paciente}}</span> </p>
+                        class="text-white">{{turno.comentario_paciente}}</span> </p>
             </div>
             <div class="text-center mt-4 d-flex justify-content-center">
                 <div *ngIf="turno.estado ==='Aceptado'" class="d-flex gap-4">

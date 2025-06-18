@@ -1,0 +1,23 @@
+.mdl-overlay {
+  
+  background: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.mdl-content {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  width: 100%;
+  min-width: 800px;
+  max-width: 1200px;
+  overflow: hidden;
+}

@@ -23,6 +23,10 @@
       <li *ngIf="rolActual === 'paciente' || rolActual === 'especialista'" class="nav-item">
         <a class="nav-link" routerLink="/mis-turnos" routerLinkActive="active">Mis turnos</a>
       </li>
+
+      <li *ngIf="rolActual === 'especialista'" class="nav-item">
+        <a class="nav-link" routerLink="/pacientes" routerLinkActive="active">Pacientes</a>
+      </li>
       <li *ngIf="rolActual === 'administrador'" class="nav-item">
         <a class="nav-link" routerLink="/turnos" routerLinkActive="active">Turnos</a>
       </li>

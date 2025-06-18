@@ -5,15 +5,27 @@
 </div>
 
 <div class="container-fluid d-flex flex-column min-vh-100">
-  <div class="p-3">
+    <h1 class="text-center my-3">{{!historial ? 'Usuarios' : 'Historial'}}</h1>
+    <h4 class="text-center mb-1">{{!historial ? 'Lista de usuarios registrados en el sistema.' : 'Registro de los turnos finalizados'}}</h4>
+
+      <div class="text-center my-2 ">
+      <button (click)="mostrarHistorial(false)"class="btn btn-light btn-sm bg-dark text-white p-2" style="border-radius: 15px;font-size: 16px;">
+        Mostrar listado
+      </button>
+      <button (click)="mostrarHistorial(true)"class="btn btn-light btn-sm bg-dark text-white p-2" style="border-radius: 15px;font-size: 16px;" >
+        Mostrar historial
+      </button>
+    </div>
+  <div class="p-3" *ngIf="!historial">
     <div class="d-flex  flex-column w-100 align-items-center justify-content-center mb-4">
-      <h1 class="text-center mb-2">Usuarios</h1>
-      <h4 class="text-center mb-1">Lista de usuarios registrados en el sistema.</h4>
     </div>
 
     <div class="text-end my-2">
-      <button (click)="mostrarRegistro()"class="btn btn-light btn-sm bg-light-blue text-white p-2" style="border-radius: 20px;">
+      <button (click)="mostrarRegistro()"class="btn btn-light btn-sm bg-light-blue text-white p-2" style="border-radius: 15px;">
         <strong style="font-size: 18px;">+</strong> Agregar un usuario
+      </button>
+      <button (click)="descargarExcelUsuarios()"class="btn btn-light btn-sm bg-success text-white p-2" style="border-radius: 15px;font-size: 16px;" >
+        Descargar listado como EXCEL
       </button>
     </div>
     <div class="row fw-bold text-center  border-bottom pb-2" style="border-top: 2px solid black;">
@@ -71,16 +83,25 @@
         }
 
 
-        <!-- <div class="col-2  text-center">
-          @if(u.rol === 'especialista')
-          {
-            {{consultarEstadoEspecialista(u.id)}}
-          }
-        </div> -->
-
       </div>
     </div>
     }
 
   </div>
+
+   <div class="p-3 d-flex" style="gap:40px" *ngIf="historial">
+    @for(paciente of usuariosAtendidos();track paciente.id_paciente )
+    {
+        <div class="card" style="width: 18rem;">
+          <img class="card-img-top" [src]="paciente.pacientes.usuarios_clinica.foto_perfil" style="height: 350px;" >
+          <div class="card-body">
+            <h2 class="card-title text-center">{{paciente.pacientes.usuarios_clinica.name}} {{paciente.pacientes.usuarios_clinica.sur_name}}</h2>
+            <div class="text-center mt-4">
+              <button (click)="descargarExcelHistorial(paciente)" href="#" class="btn btn-primary ">Descargar historial</button>
+            </div>
+          </div>
+
+      </div>
+    }
+   </div>
 </div>

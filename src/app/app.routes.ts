@@ -61,6 +61,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/solicitar-turno/solicitar-turno.component').then((m) => m.SolicitarTurnoComponent),
   },
+      {
+    title: "Historial",
+    path: 'pacientes',
+    loadComponent: () =>
+      import('./pages/pacientes/pacientes.component').then((m) => m.PacientesComponent)
+  }
 
 
 

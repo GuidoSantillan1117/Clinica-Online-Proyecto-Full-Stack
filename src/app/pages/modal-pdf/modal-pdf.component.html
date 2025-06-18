@@ -1,0 +1,17 @@
+<div class="container bg-white" >
+  <h3 class="text-center text-black mt-3"mat-dialog-title>Selecciona un especialista </h3>
+  <mat-dialog-content class="text-white  " >
+
+    <select [(ngModel)]="especialistaSeleccionado" class="form-select" aria-label="Default select example">
+      <option disabled [ngValue]="null">Elegir una especialidad</option>
+  <option *ngFor="let especialista of especialistas" [value]="especialista.id_especialista">{{especialista.especialistas.usuarios_clinica.name}}</option>
+</select>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <div class="d-flex"style="gap:20px;">
+            <button class="btn bg-success rounded bg-danger"  (click)="cancelar()">Cancelar</button>
+          <button [disabled]="especialistaSeleccionado ===undefined"class="btn bg-success rounded" mat-raised-button color="primary" (click)="enviar()">Descargar</button>
+        </div>
+    </mat-dialog-actions>
+
+</div>

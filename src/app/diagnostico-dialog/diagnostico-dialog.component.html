@@ -1,22 +1,72 @@
 <div class="container bg-white ">
-    <h3 class="text-center text-black mt-4 "  style="text-decoration: underline;"mat-dialog-title>Diagnostico del paciente</h3>
+    <h3 style="color:#000000;"class="text-center mt-4 " mat-dialog-title>Resultado del turno</h3>
 
     <mat-dialog-content class="text-black  p-0 m-0">
+        <h4 style="color:#004aad;" class="text-center  mt-4 " mat-dialog-title>Datos del paciente</h4>
+        <form [formGroup]="formDiagnostico">
+            <h5 class="my-4">Obligatorios</h5>
+            <div class="my-2">
+                <label for="comentario" class="form-label">Altura </label>
+                <input  [ngClass]="formDiagnostico.get('altura')?.invalid && formDiagnostico.get('altura')?.touched ? 'border-danger' : ''"
+                style="width: 400px" class="form-control" formControlName="altura" name="comentario"
+                    type="text" />
+            </div>
+            <div class="my-2">
+                <label for="comentario" class="form-label">Peso </label>
+                <input [ngClass]="formDiagnostico.get('peso')?.invalid && formDiagnostico.get('peso')?.touched ? 'border-danger' : ''"
+                style="width: 400px" class="form-control" formControlName="peso" name="comentario" type="text" />
+            </div>
+            <div class="my-2">
+                <label for="comentario" class="form-label">Temperatura </label>
+                <input  [ngClass]="formDiagnostico.get('temperatura')?.invalid && formDiagnostico.get('temperatura')?.touched ? 'border-danger' : ''"
+                style="width: 400px" class="form-control " formControlName="temperatura" name="comentario"
+                    type="text" />
+            </div>
+            <div class="my-2 border-bottom">
+                <label for="comentario" class="form-label">Presión </label>
+                <input [ngClass]="formDiagnostico.get('presion')?.invalid && formDiagnostico.get('presion')?.touched ? 'border-danger' : ''"
+                 style="width: 400px" class="form-control " formControlName="presion" name="comentario"
+                    type="text" />
+            </div>
+                <div class="d-flex justify-content-between align-items-center my-5">
+                <h5 class="m-0">Adicionales</h5>
+                <button [disabled]="datosExtra.length === 3" (click)="agregarDatoExtra()"class="btn bg-light-blue btn-light ">
+                    <i class="bi bi-plus text-white"></i>
+                </button>
+                </div>
 
-        <div class="my-4">
-            <label for="comentario" class="form-label">Ingrese las indicaciones </label>
-            <input  style="width: 400px"class="form-control "  [(ngModel)]="comentario" name="comentario" type="text" />
-        </div>
-        <div class="my-3">
-            <label for="diagnostico" class="form-label">Ingrese el diagnostico</label>
-            <input  style="width: 400px"class="form-control "  [(ngModel)]="diagnostico" name="diagnostico" type="text" />
-        </div>
+            <div formArrayName="datosExtra">
+            <div *ngFor="let grupo of datosExtra.controls; let i = index" [formGroupName]="i">
+                <label>Dato extra N° {{ i + 1 }}</label>
+                <input [ngClass]="grupo.get('clave')?.invalid && grupo.get('clave')?.touched ? 'border-danger' : ''"   class="form-control mb-2" formControlName="clave" placeholder="Clave" />
+                <input [ngClass]="grupo.get('valor')?.invalid && grupo.get('valor')?.touched ? 'border-danger' : ''"class="form-control mb-2" formControlName="valor" placeholder="Valor" />
+            </div>
+            </div>
+
+
+            <h4 style="color:#004aad;" class="text-center  mt-4 " mat-dialog-title>Comentarios </h4>
+
+            <div class="my-4">
+                <label for="comentario" class="form-label">Indicaciones </label>
+                <input
+                    [ngClass]="formDiagnostico.get('comentario')?.invalid && formDiagnostico.get('comentario')?.touched ? 'border-danger' : ''"
+                    style="width: 400px" class="form-control" formControlName="comentario" name="comentario"
+                    type="text" />
+            </div>
+            <div class="my-3">
+                <label for="diagnostico" class="form-label">Diagnostico</label>
+                <input [ngClass]="formDiagnostico.get('diagnostico')?.invalid && formDiagnostico.get('diagnostico')?.touched ? 'border-danger' : ''"
+                style="width: 400px" class="form-control " formControlName="diagnostico" name="diagnostico"
+                    type="text" />
+            </div>
+        </form>
+
     </mat-dialog-content>
 
     <mat-dialog-actions align="center">
-        <div class="d-flex mt-3"style="gap:20px; ">
+        <div class="d-flex mt-3" style="gap:20px; ">
             <button class="btn bg-success rounded bg-danger" (click)="cancelar()">Cancelar</button>
-          <button class="btn bg-success rounded" mat-raised-button color="primary" (click)="enviar()">Enviar</button>
+            <button [disabled]="formDiagnostico.invalid" class="btn bg-success rounded" mat-raised-button color="primary" (click)="enviar()">Enviar</button>
         </div>
     </mat-dialog-actions>
 </div>

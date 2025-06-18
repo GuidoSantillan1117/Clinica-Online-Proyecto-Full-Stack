@@ -11,10 +11,13 @@ import { User } from '../../clases/User';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Especialidad } from './Especialidad';
+import { ModalPdfComponent } from '../modal-pdf/modal-pdf.component';
+import { MatDialog } from '@angular/material/dialog';
 
 import { Pipe } from '@angular/core';
 
 import { DatePipe } from '@angular/common';
+import { PdfService } from '../../services/pdf.service';
 
 
 @Component({
@@ -26,14 +29,16 @@ import { DatePipe } from '@angular/common';
 })
 
 export class MiPerfilComponent {
+  mostrarHistorial = false;
   idEspecialista : number | undefined;
   horaInicio : any;
   horaFinal : any;
   sinErrores = false;
   listaEspecialidadesUsuario : any = []
+  historialUsuario : any = []
   usuario: User | null = null;
   private  usuarioSub! : Subscription;
-  constructor(private dbService: DatabaseService, private authService: AuthService) {
+  constructor(private dbService: DatabaseService, private authService: AuthService,private pdf:PdfService,private matDialog: MatDialog) {
     this.usuarioSub = this.authService.currentUser$.subscribe(user => {
       if (user) {
         this.usuario = user;
@@ -47,6 +52,37 @@ export class MiPerfilComponent {
     }
   }
 
+
+  async cargarHistorial()
+  {
+    this.mostrarHistorial = !this.mostrarHistorial
+
+    if(this.mostrarHistorial)
+    {
+      const {data,error} = await this.dbService.cargarHistorialClinicoPaciente(this.usuario!.id)
+      if(!error)
+      {
+        this.historialUsuario = data
+        console.log(this.historialUsuario)
+      }
+
+    }
+  }
+
+  descargarPdfHistorial()
+  {
+    this.pdf.crearPdf(this.historialUsuario)
+  }
+
+  descargarPdfFiltrado()
+  {
+    const comentarioDialog = this.matDialog.open(ModalPdfComponent, {
+            disableClose: true,
+            data:{
+              id:this.usuario?.id
+            }
+          });
+  }
   async traerEspecialidades(id:string)
   {
     const { data} = await this.dbService.cargarEspecialidades(id);
