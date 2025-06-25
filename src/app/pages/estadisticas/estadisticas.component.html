@@ -1,0 +1,177 @@
+<div class="container-fluid d-flex flex-column min-vh-100  ">
+    <div class="p-3 ">
+        <div class="d-flex flex-column w-100 align-items-center justify-content-center mb-4">
+            <h1 class="text-center mb-2">{{mostrarGrafico ? 'Estadisticas' : 'Ingresos'}}</h1>
+            <h4 class="text-center mb-1">{{mostrarGrafico ? 'Gráficos de los turnos del sistema' : 'Lista de los ingresos en el sistema'}}</h4>
+        </div>
+
+        <div class="my-3 d-flex justify-content-center gap-2">
+            <button (click)="mostrarEstadisticas(false)" class="btn btn-light btn-sm bg-dark text-white p-2"
+                style="border-radius: 15px;font-size: 16px;">
+                Ingresos al sistema
+            </button>
+            <button (click)="mostrarEstadisticas(true)" class="btn btn-light btn-sm bg-dark text-white p-2"
+                style="border-radius: 15px;font-size: 16px; ">
+                Estadisticas de los turnos
+            </button>
+        </div>
+
+        <div *ngIf="!mostrarGrafico">
+
+            <div class="row fw-bold text-center  border-bottom pb-2" style="border-top: 2px solid black;">
+                <div style="font-size: 24px;" class="col-3 mt-3 ">Fecha</div>
+                <div style="font-size: 24px;" class="col-3 mt-3">ID</div>
+                <div style="font-size: 24px;" class="col-3 mt-3">Nombre</div>
+                <div style="font-size: 24px;" class="col-3 mt-3">Apellido</div>
+            </div>
+
+            @for (ingreso of ingresos (); track ingreso.id_ingreso) {
+            <div class="grid w-100 border-bottom">
+                <div class="row align-items-center p-2">
+                    <div class="col-3 text-center">
+                        {{ingreso.fecha | date:'short'}}
+                    </div>
+                    <div class="col-3 text-center">
+                        {{ingreso.id_usuario}}
+                    </div>
+                    <div class="col-3 text-center ">
+                        {{ingreso.usuarios_clinica.name}}
+                    </div>
+                    <div class="col-3 text-center">
+                        {{ingreso.usuarios_clinica.sur_name}}
+                    </div>
+
+                </div>
+
+            </div>
+            }
+
+        </div>
+        <div *ngIf="mostrarGrafico" class="p-3 container d-flex flex-column align-items-center gap-5 ">
+                        <div class="row mb-5">
+                <div class="col-md-6">
+                    <div class="bg-light-blue text-center py-3 mb-3 d-flex flex-column justify-content-center text-white">
+                        <h3>TURNOS SOLICITADOS</h3>
+                    </div>
+
+                    <div class="border p-2">
+                        <app-graficos class="p-1" [colores]="colorGrafico2" [data]="grafico3"></app-graficos>
+                    </div>
+
+                    <!-- Filtros -->
+                    <div class="mt-4 border rounded p-3 " >
+                        <p class="text-center mb-3 fw-bold">Filtrar por fecha</p>
+
+                        
+<div class="d-flex flex-wrap justify-content-center align-items-end gap-3">
+  <div class="form-group">
+    <label for="fechaInicioSolicitados">Desde</label>
+    <input
+      type="date"
+      id="fechaInicioSolicitados"
+      class="form-control"
+      [(ngModel)]="fechaInicioSolicitados"
+      name="fechaInicioSolicitados"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="fechaFinalSolicitados">Hasta</label>
+    <input
+      type="date"
+      id="fechaFinalSolicitados"
+      class="form-control"
+      [(ngModel)]="fechaFinalSolicitados"
+      name="fechaFinalSolicitados"
+    />
+  </div>
+
+  <button
+    class="btn bg-light-blue text-white "
+    [disabled]="!fechaInicioSolicitados || !fechaFinalSolicitados"
+    (click)="mostrarEstadisticasPorFecha('Pendiente')">Buscar
+  </button>
+</div>
+                        <div class="text-center my-4">
+                            <button (click)="descargarExcelUsuarios(grafico3,'turnos','turnos_pendiente')"class="btn btn-lg bg-light-blue text-white">Descargar</button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-6">
+                    <div class="bg-light-blue text-center py-3 mb-3 text-white">
+                        <h3>TURNOS FINALIZADOS</h3>
+                    </div>
+
+                    <div class="border p-2">
+                        <app-graficos class="p-1" [colores]="colorGrafico2" [data]="grafico4"></app-graficos>
+                    </div>
+
+                    <div class="mt-4 border rounded p-3">
+                        <p class="text-center mb-3 fw-bold">Filtrar por fecha</p>
+
+<div class="d-flex flex-wrap justify-content-center align-items-end gap-3">
+  <div class="form-group">
+    <label for="fechaInicioFinalizados">Desde</label>
+    <input
+      type="date"
+      id="fechaInicioFinalizados"
+      class="form-control"
+      [(ngModel)]="fechaInicioFinalizados"
+      name="fechaInicioFinalizados"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="fechaFinalFinalizados">Hasta</label>
+    <input
+      type="date"
+      id="fechaFinalFinalizados"
+      class="form-control"
+      [(ngModel)]="fechaFinalFinalizados"
+      name="fechaFinalFinalizados"
+    />
+  </div>
+
+  <button
+    class="btn bg-light-blue text-white"
+    [disabled]="!fechaInicioFinalizados || !fechaFinalFinalizados"
+    (click)="mostrarEstadisticasPorFecha('Realizado')">Buscar
+  </button>
+</div>
+
+                        <div class="text-center my-4">
+                            <button (click)="descargarExcelUsuarios(grafico4,'turnos','turnos_realizados')"class="btn btn-lg bg-light-blue text-white">Descarga</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row mb-5 ">
+                <div class="col-md-6  d-flex flex-column justify-content-center py-3">
+                    <div class="bg-light-blue text-center text-white py-3 mb-3">
+                        <h3>TURNOS POR ESPECIALIDAD</h3>
+                    </div>
+                    <div class="border">
+                        <app-graficos class="p-1" [colores]="colorGrafico1" [data]="grafico1"></app-graficos>
+                    </div>
+                    <div class="text-center border py-3 my-3">
+                        <button (click)="descargarExcelUsuarios(grafico1,'turnos','turnos_por_especialidad','especialidad')" class="btn btn-lg bg-light-blue text-white  ">Descargar</button>
+                    </div>
+                </div>
+
+                <div class="col-md-6 d-flex flex-column justify-content-center py-3">
+                    <div class="bg-light-blue text-center py-3 mb-3 text-white">
+                        <h3>TURNOS POR DÍA</h3>
+                    </div>
+                    <div class="border">
+                        <app-graficos class="p-1" [colores]="colorGrafico1" [data]="grafico2"></app-graficos>
+                    </div>
+                    <div class="text-center border py-3 my-3" >
+                        <button  (click)="descargarExcelUsuarios(grafico2,'turnos','turnos_por_fecha','fecha')"class="btn btn-lg bg-light-blue text-white  ">Descargar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

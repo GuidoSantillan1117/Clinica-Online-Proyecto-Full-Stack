@@ -42,7 +42,7 @@
     {
     <div class="d-flex flex-column">
         <button class="btn btn-light bg-light-blue" *ngFor="let dia of listaDias" (click)='elegirHoraTurno(dia)'>
-            {{dia.nombreDia | titlecase}}/{{dia.dia}}/{{dia.mes}}
+            {{dia.nombreDia | titlecase}} {{dia.dia}}/{{dia.mes}}
         </button>
     </div>
 

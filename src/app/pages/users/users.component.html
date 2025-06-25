@@ -8,7 +8,7 @@
     <h1 class="text-center my-3">{{!historial ? 'Usuarios' : 'Historial'}}</h1>
     <h4 class="text-center mb-1">{{!historial ? 'Lista de usuarios registrados en el sistema.' : 'Registro de los turnos finalizados'}}</h4>
 
-      <div class="text-center my-2 ">
+      <div class="d-flex justify-content-center gap-2 my-3">
       <button (click)="mostrarHistorial(false)"class="btn btn-light btn-sm bg-dark text-white p-2" style="border-radius: 15px;font-size: 16px;">
         Mostrar listado
       </button>
@@ -20,7 +20,7 @@
     <div class="d-flex  flex-column w-100 align-items-center justify-content-center mb-4">
     </div>
 
-    <div class="text-end my-2">
+    <div class="d-flex justify-content-end gap-2 my-2">
       <button (click)="mostrarRegistro()"class="btn btn-light btn-sm bg-light-blue text-white p-2" style="border-radius: 15px;">
         <strong style="font-size: 18px;">+</strong> Agregar un usuario
       </button>

@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'parcial2';
   isLogged: boolean = false;
   loginValido: boolean = false;
@@ -30,7 +30,4 @@ export class AppComponent implements OnInit {
 
   }
 
-  ngOnInit(): void {
-    this.supabaseAuth.signOut();
-  }
 }

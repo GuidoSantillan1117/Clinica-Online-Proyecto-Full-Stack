@@ -30,6 +30,7 @@ export class NavbarComponent implements OnDestroy {
   async salir(){
     this.authService.signOut();
     this.router.navigateByUrl('/home');
+
   }
 
   mostrar()

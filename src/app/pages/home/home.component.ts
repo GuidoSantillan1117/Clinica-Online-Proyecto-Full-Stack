@@ -55,7 +55,11 @@ export class HomeComponent {
             panelClass: ['snackbar-bienvenido']
           });
           setTimeout(() => {
+            
             this.supabaseAuth.validarLogin();
+            this.dbService.subirIngreso(data.user?.id)
+            localStorage.setItem('usuario', JSON.stringify(data.user));
+
             this.router.navigateByUrl('/bienvenida');
           }, 3000);
         }

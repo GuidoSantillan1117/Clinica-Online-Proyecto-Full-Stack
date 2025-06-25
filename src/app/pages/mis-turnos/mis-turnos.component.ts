@@ -12,6 +12,8 @@ import { ComentarioDialogComponent } from '../../comentario-dialog/comentario-di
 import { EncuestaDialogComponent } from '../../encuesta-dialog/encuesta-dialog.component';
 import { ValoracionDialogComponent } from '../../valoracion-dialog/valoracion-dialog.component';
 import { DiagnosticoDialogComponent } from '../../diagnostico-dialog/diagnostico-dialog.component';
+import { RealtimeChannel } from '@supabase/supabase-js';
+import { SupabaseService } from '../../services/supabase.service';
 
 @Component({
   selector: 'app-mis-turnos',
@@ -22,6 +24,7 @@ import { DiagnosticoDialogComponent } from '../../diagnostico-dialog/diagnostico
 })
 export class MisTurnosComponent implements OnInit, OnDestroy {
 
+  canal: RealtimeChannel | null = null;
   idUsuario: string | null = null;
   tipoUsuario: string | null = null;
   turnos = signal<any[]>([]);
@@ -33,7 +36,7 @@ export class MisTurnosComponent implements OnInit, OnDestroy {
 
 
   private usuarioSub!: Subscription;
-  constructor(private dbService: DatabaseService, private authService: AuthService, private matDialog: MatDialog) {
+  constructor(private dbService: DatabaseService, private authService: AuthService, private matDialog: MatDialog ,private supaBaseService:SupabaseService) {
 
     this.usuarioSub = this.authService.currentUser$.subscribe(user => {
       this.idUsuario = user ? user.id : null;
@@ -45,8 +48,40 @@ export class MisTurnosComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.traerTurnos();
+    console.log(this.tipoUsuario)
+      this.canal = this.supaBaseService.supabase.channel("turnos");
+      this.canal.on(
+        "postgres_changes",
+        {
+          event: "*",
+          table: "turnos_clinica",
+          schema: "public",
+        },
+        async (cambios: any) => {
+          if(this.tipoUsuario === 'paciente')
+          {
+            const {data} = await this.dbService.traerIdPaciente(this.idUsuario!) 
+            if(cambios.new.id_paciente === data?.id_paciente)
+            {
+
+              this.traerTurnos();
+            }
+          }
+          else{
+            const {data} = await this.dbService.obtenerIdEspecialista(this.idUsuario!)
+            if(cambios.new.id_especialista === data?.id_especialista) 
+            {
+              console.log("entre")
+              this.traerTurnos();
+            }
+          }
+        }
+        
+      );
+    this.canal!.subscribe();
   }
+
+  
 
   filtrar() {
     const filtrados = [];
@@ -87,6 +122,7 @@ export class MisTurnosComponent implements OnInit, OnDestroy {
   }
 
   async traerTurnos() {
+    this.turnos.set([])
     if (this.idUsuario) {
       if (this.tipoUsuario === 'paciente') {
         const { data, error } = await this.dbService.cargarTurnosPaciente(this.idUsuario, this.tipoUsuario!);
@@ -195,5 +231,6 @@ export class MisTurnosComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.usuarioSub.unsubscribe();
+    this.canal?.unsubscribe();
   }
 }

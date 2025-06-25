@@ -20,28 +20,37 @@ export class AuthService {
 
 
   constructor(private supabaseService: SupabaseService, private router: Router) {
+    console.log("Entre");
+    const savedUser = localStorage.getItem('usuario');
+    if (savedUser) {
+      console.log("hay")
+      this.loginValido.next(true)
+      const user = JSON.parse(savedUser);
+      this.currentUserSubject.next(user); 
+    }
     this.checkChange();
   }
 
-  validarLogin(){
+  validarLogin() {
     this.loginValido.next(true);
   }
   async cargarUsuario() {
 
-      const { data: sessionData } = await this.supabaseService.supabase.auth.getUser();
-  
-      if (sessionData?.user) {
-        const id = sessionData.user.id;
-        const { data: userInfo } = await this.supabaseService.supabase
-          .from('usuarios_clinica')
-          .select('*')
-          .eq('id', id)
-          .single();
+    const { data: sessionData } = await this.supabaseService.supabase.auth.getUser();
 
-    if (userInfo) {
-      const user = new User(userInfo.id_user,userInfo.id, userInfo.name, userInfo.sur_name, userInfo.age, userInfo.dni,userInfo.rol,userInfo.foto_perfil,userInfo.foto_fondo);
-      this.currentUserSubject.next(user);
-    }
+    if (sessionData?.user) {
+      const id = sessionData.user.id;
+      const { data: userInfo } = await this.supabaseService.supabase
+        .from('usuarios_clinica')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (userInfo) {
+        const user = new User(userInfo.id_user, userInfo.id, userInfo.name, userInfo.sur_name, userInfo.age, userInfo.dni, userInfo.rol, userInfo.foto_perfil, userInfo.foto_fondo);
+        this.currentUserSubject.next(user);
+        localStorage.setItem('usuario', JSON.stringify(user));
+      }
 
     }
   }
@@ -59,6 +68,9 @@ export class AuthService {
       } else {
         this._isLoggedIn.next(false);
         this.loginValido.next(false);
+        this.currentUserSubject.next(null);
+        localStorage.removeItem('usuario');
+        this.router.navigate(['/home'])
       }
     });
   }

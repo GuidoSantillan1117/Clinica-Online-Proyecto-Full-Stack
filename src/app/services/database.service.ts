@@ -7,13 +7,13 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class DatabaseService {
-  private registroOpenSubject = new BehaviorSubject<boolean>(false); 
-  registroOpen$ = this.registroOpenSubject.asObservable(); 
+  private registroOpenSubject = new BehaviorSubject<boolean>(false);
+  registroOpen$ = this.registroOpenSubject.asObservable();
 
   constructor(private supabaseService: SupabaseService) {
 
   }
-    abrirRegistro() {
+  abrirRegistro() {
     this.registroOpenSubject.next(true);
   }
 
@@ -122,14 +122,13 @@ export class DatabaseService {
 
   }
 
-  async obtenerIdEspecialista(id:string)
-  {
-    const {data} = await this.supabaseService.supabase.from('especialistas')
-    .select('id_especialista')
-    .eq('id',id)
-    .single()
+  async obtenerIdEspecialista(id: string) {
+    const { data } = await this.supabaseService.supabase.from('especialistas')
+      .select('id_especialista')
+      .eq('id', id)
+      .single()
 
-    return {data}
+    return { data }
   }
 
   async actualizarEstadoEspecialista(id: string, habilitado: boolean) {
@@ -141,15 +140,40 @@ export class DatabaseService {
     return { estadoUsuario, error };
   }
 
-  async cargarTurnos()
-  {
-    const {data,error} = await this.supabaseService.supabase
-    .from('turnos_clinica')
-    .select(`id_turno, id_paciente, id_especialista, estado, especialidad, fecha, hora, pacientes(id, usuarios_clinica(name, sur_name)),
+  async cargarTurnos() {
+    const { data, error } = await this.supabaseService.supabase
+      .from('turnos_clinica')
+      .select(`id_turno, id_paciente, id_especialista, estado, especialidad, fecha, hora, pacientes(id, usuarios_clinica(name, sur_name)),
        especialistas(id, usuarios_clinica(name, sur_name))`)
-    .order('fecha', { ascending: false });
-    
-    return { data, error  };
+      .order('fecha', { ascending: false });
+
+    return { data, error };
+  }
+
+  async cargarTurnosEstado(estado: string, min?: Date, max?: Date) {
+
+
+
+    let query = this.supabaseService.supabase
+      .from('turnos_clinica').
+      select(` id_especialista,estado,especialistas:id_especialista (id, usuarios_clinica:id (name,sur_name))`)
+      .eq('estado', estado)
+      .order('fecha', { ascending: false });
+
+      if(min && max)
+      {
+      // const desde = min!.toISOString();
+      // const hasta = max!.toISOString();
+      query = query.gte('fecha', min)
+      query = query.lte('fecha', max)
+      }
+
+      
+      const{data,error }= await query;
+      console.log(data)
+  
+      console.log(error)
+    return { data, error };
   }
   async cargarTurnosPaciente(id: string, tipoUsuario: string) {
     const { data: dataPaciente, error: pacienteError } = await this.supabaseService.supabase
@@ -195,25 +219,22 @@ export class DatabaseService {
     return { data: turnosModificado, error };
   }
 
-  async cargarDatos(id_turno:number,altura:any,peso:any,temperatura:any,presion:any,datosExtra:any)
-  {
-    const {data,error} = await this.supabaseService.supabase.from('turnos_datos')
-    .insert([{id_turno:id_turno,altura:altura,peso:peso,temperatura:temperatura,presion:presion}])
-    if(!error)
-    {
+  async cargarDatos(id_turno: number, altura: any, peso: any, temperatura: any, presion: any, datosExtra: any) {
+    const { data, error } = await this.supabaseService.supabase.from('turnos_datos')
+      .insert([{ id_turno: id_turno, altura: altura, peso: peso, temperatura: temperatura, presion: presion }])
+    if (!error) {
       console.log(error)
-      const camposExtras:any = {};
+      const camposExtras: any = {};
       let index = 1;
-      for(let grupo of datosExtra)
-      {
+      for (let grupo of datosExtra) {
         const clave = grupo.clave
         const valor = grupo.valor
         camposExtras[`dato_${index}`] = { clave, valor };
         index++
-        
-        const {error:errorT}= await this.supabaseService.supabase.from('turnos_datos')
-        .update(camposExtras)
-        .eq('id_turno',id_turno)
+
+        const { error: errorT } = await this.supabaseService.supabase.from('turnos_datos')
+          .update(camposExtras)
+          .eq('id_turno', id_turno)
 
         console.log(errorT)
       }
@@ -230,7 +251,7 @@ export class DatabaseService {
 
   async cargarDiagnostico(id: number, diagnostico: any) {
     const { error } = await this.supabaseService.supabase
-    .from('turnos_clinica')
+      .from('turnos_clinica')
       .update({ diagnostico: diagnostico.diagnostico })
       .eq('id_turno', id);
   }
@@ -267,18 +288,17 @@ export class DatabaseService {
       .select('id_especialista,especialidad_1, especialidad_2, especialidad_3, especialidad_4')
       .eq('id', id)
       .single();
-      
-      return { data, error };
+
+    return { data, error };
   }
 
-  async cargarHorarios(id:number)
-  {
+  async cargarHorarios(id: number) {
     const { data, error } = await this.supabaseService.supabase
-    .from('especialistas_horario')
-    .select('dia,hora_inicio,hora_final')
-    .eq('id_especialista',id)
+      .from('especialistas_horario')
+      .select('dia,hora_inicio,hora_final')
+      .eq('id_especialista', id)
 
-    return {data,error}
+    return { data, error }
   }
 
   async filtrarDiaEspecialidad(id: string, especialidad: string) {
@@ -292,162 +312,165 @@ export class DatabaseService {
   }
 
 
-  async subirHorario(especialidad:any,id_especialista:number)
-  {
+  async subirHorario(especialidad: any, id_especialista: number) {
     const diaFormateado = (especialidad.dia + '').toLowerCase();
     const { data, error } = await this.supabaseService.supabase
-    .from('especialistas_horario')
-    .insert([{id_especialista:id_especialista,dia:diaFormateado,hora_inicio:especialidad.inicio,hora_final:especialidad.final,especialidad:especialidad.valor}])
+      .from('especialistas_horario')
+      .insert([{ id_especialista: id_especialista, dia: diaFormateado, hora_inicio: especialidad.inicio, hora_final: especialidad.final, especialidad: especialidad.valor }])
 
-    return {data,error}
+    return { data, error }
   }
 
-  async traerDatosEspecialistas(){
-    const {data,error} = await this.supabaseService.supabase.from('especialistas')
-    .select('id_especialista,id,especialidad_1,especialidad_2,especialidad_3,especialidad_4,usuarios_clinica(name,sur_name,foto_perfil)')
-    .eq('estado','Aprobado')
+  async traerDatosEspecialistas() {
+    const { data, error } = await this.supabaseService.supabase.from('especialistas')
+      .select('id_especialista,id,especialidad_1,especialidad_2,especialidad_3,especialidad_4,usuarios_clinica(name,sur_name,foto_perfil)')
+      .eq('estado', 'Aprobado')
 
-    return {data,error}
+    return { data, error }
   }
 
-  async verificarDisponibilidad(id_especialista:number,especialidad:string,fecha:string)
-  {
-     const {data,error} = await this.supabaseService.supabase.from('turnos_clinica')
-     .select('hora')
-     .eq('id_especialista',id_especialista)
-     .eq('especialidad',especialidad)
-     .eq('fecha',fecha)
+  async verificarDisponibilidad(id_especialista: number, especialidad: string, fecha: string) {
+    const { data, error } = await this.supabaseService.supabase.from('turnos_clinica')
+      .select('hora')
+      .eq('id_especialista', id_especialista)
+      .eq('especialidad', especialidad)
+      .eq('fecha', fecha)
 
-     return {data,error}
+    return { data, error }
   }
 
-  async verificarDiaYaAsignado(dia:string,id_paciente:number,id_especialista:number,especialidad:string)
-  {
-     const {data} = await this.supabaseService.supabase.from('turnos_clinica')
-     .select('id_turno')
-     .eq('id_especialista',id_especialista)
-     .eq('especialidad',especialidad)
-     .eq('id_paciente',id_paciente)
-     .eq('fecha',dia)
+  async verificarDiaYaAsignado(dia: string, id_paciente: number, id_especialista: number, especialidad: string) {
+    const { data } = await this.supabaseService.supabase.from('turnos_clinica')
+      .select('id_turno')
+      .eq('id_especialista', id_especialista)
+      .eq('especialidad', especialidad)
+      .eq('id_paciente', id_paciente)
+      .eq('fecha', dia)
 
-     return {data}
+    return { data }
   }
 
-  async traerIdPaciente(id:string)
-  {
-     const {data,error} = await this.supabaseService.supabase.from('pacientes')
-     .select('id_paciente')
-     .eq('id',id)
-     .single()
+  async traerIdPaciente(id: string) {
+    const { data, error } = await this.supabaseService.supabase.from('pacientes')
+      .select('id_paciente')
+      .eq('id', id)
+      .single()
 
-     return {data,error}
+    return { data, error }
   }
 
-  async crearTurno(id_paciente:number,id_especialista:number,hora:string,fecha:string,especialidad:string)
-  {
-    const {error} = await this.supabaseService.supabase.from('turnos_clinica')
-    .insert([{id_especialista:id_especialista,id_paciente:id_paciente,especialidad:especialidad,fecha:fecha,hora:hora}])
+  async crearTurno(id_paciente: number, id_especialista: number, hora: string, fecha: string, especialidad: string) {
+    const { error } = await this.supabaseService.supabase.from('turnos_clinica')
+      .insert([{ id_especialista: id_especialista, id_paciente: id_paciente, especialidad: especialidad, fecha: fecha, hora: hora }])
 
-    return {error}
+    return { error }
   }
 
-  async traerTodosPacientes()
-  {
-      const {data,error} = await this.supabaseService.supabase.from('pacientes')
+  async traerTodosPacientes() {
+    const { data, error } = await this.supabaseService.supabase.from('pacientes')
       .select('id_paciente,id,usuarios_clinica(name,sur_name)')
 
-      return {data,error}
+    return { data, error }
   }
 
-  async cargarHistorialClinicoPaciente(id:string)
-  {
-    const {data:dataId} = await this.traerIdPaciente(id)
+  async cargarHistorialClinicoPaciente(id: string) {
+    const { data: dataId } = await this.traerIdPaciente(id)
 
-    const {data,error} = await this.supabaseService.supabase.from('turnos_clinica')
-    .select('id_turno,especialidad,comentario_especialista,diagnostico,fecha,turnos_datos(altura,peso,temperatura,presion,dato_1,dato_2,dato_3)')
-    .eq('id_paciente',dataId?.id_paciente)
-    .eq('estado','Realizado')
+    const { data, error } = await this.supabaseService.supabase.from('turnos_clinica')
+      .select('id_turno,especialidad,comentario_especialista,diagnostico,fecha,turnos_datos(altura,peso,temperatura,presion,dato_1,dato_2,dato_3)')
+      .eq('id_paciente', dataId?.id_paciente)
+      .eq('estado', 'Realizado')
 
-    return {data,error}
-
-  }
-
-
-async cargarEspecialistasAtendidos(id:string)
-{
-
-  const {data} = await this.traerIdPaciente(id);
-
-  const {data:dataTurno} = await this.supabaseService.supabase.from('turnos_clinica')
-  .select('id_especialista,especialistas(id,usuarios_clinica(name,sur_name))')
-  .eq('id_paciente',data!.id_paciente)
-
-  return {dataTurno};
-  
-}
-async cargarPacientesAtendidos(filtrarPorEspecialista: boolean,id?: string,) {
-  let idEspecialista = null;
-  if(id)
-  {
-    
-    const { data: dataEspecialista } = await this.obtenerIdEspecialista(id);
-    idEspecialista = dataEspecialista?.id_especialista
+    return { data, error }
 
   }
 
-  let query = this.supabaseService.supabase
-    .from('turnos_clinica')
-    .select('id_paciente,id_especialista,pacientes(id,usuarios_clinica(name,sur_name,foto_perfil))')
-    .eq('estado', 'Realizado');
 
-  if (filtrarPorEspecialista && idEspecialista) {
-    query = query.eq('id_especialista', idEspecialista);
+  async cargarEspecialistasAtendidos(id: string) {
+
+    const { data } = await this.traerIdPaciente(id);
+
+    const { data: dataTurno } = await this.supabaseService.supabase.from('turnos_clinica')
+      .select('id_especialista,especialistas(id,usuarios_clinica(name,sur_name))')
+      .eq('id_paciente', data!.id_paciente)
+
+    return { dataTurno };
+
   }
+  async cargarPacientesAtendidos(filtrarPorEspecialista: boolean, id?: string,) {
+    let idEspecialista = null;
+    if (id) {
 
-  const { data, error } = await query;
+      const { data: dataEspecialista } = await this.obtenerIdEspecialista(id);
+      idEspecialista = dataEspecialista?.id_especialista
 
-  return { data, error };
-}
+    }
 
-  async cargarHistorialClinicoPacienteEspecialista(filtrarPorEspecialista: boolean,id_paciente:number,id?:string)
-  {
-
-      let idEspecialista = null;
-  if(id)
-  {
-    
-    const { data: dataEspecialista } = await this.obtenerIdEspecialista(id);
-    idEspecialista = dataEspecialista?.id_especialista
-  }
-
-    let query =  this.supabaseService.supabase.from('turnos_clinica')
-    .select('id_turno,especialidad,comentario_paciente,diagnostico,fecha,turnos_datos(altura,peso,temperatura,presion,dato_1,dato_2,dato_3)')
-    .eq('id_paciente',id_paciente)
-    .eq('estado','Realizado')
-    .order('fecha', { ascending: false });
+    let query = this.supabaseService.supabase
+      .from('turnos_clinica')
+      .select('id_paciente,id_especialista,pacientes(id,usuarios_clinica(name,sur_name,foto_perfil))')
+      .eq('estado', 'Realizado');
 
     if (filtrarPorEspecialista && idEspecialista) {
-    query = query.eq('id_especialista', idEspecialista);
+      query = query.eq('id_especialista', idEspecialista);
+    }
+
+    const { data, error } = await query;
+
+    return { data, error };
   }
 
-  const {data,error} = await query
+  async cargarHistorialClinicoPacienteEspecialista(filtrarPorEspecialista: boolean, id_paciente: number, id?: string) {
 
-    return {data,error}
+    let idEspecialista = null;
+    if (id) {
+
+      const { data: dataEspecialista } = await this.obtenerIdEspecialista(id);
+      idEspecialista = dataEspecialista?.id_especialista
+    }
+
+    let query = this.supabaseService.supabase.from('turnos_clinica')
+      .select('id_turno,especialidad,comentario_paciente,diagnostico,fecha,turnos_datos(altura,peso,temperatura,presion,dato_1,dato_2,dato_3)')
+      .eq('id_paciente', id_paciente)
+      .eq('estado', 'Realizado')
+      .order('fecha', { ascending: false });
+
+    if (filtrarPorEspecialista && idEspecialista) {
+      query = query.eq('id_especialista', idEspecialista);
+    }
+
+    const { data, error } = await query
+
+    return { data, error }
   }
 
 
-  async cargarHistorialConEspecialista(id:string,id_especialista:number){
-    const {data:dataPaciente} = await this.traerIdPaciente(id);
+  async cargarHistorialConEspecialista(id: string, id_especialista: number) {
+    const { data: dataPaciente } = await this.traerIdPaciente(id);
 
-    const {data,error} = await this.supabaseService.supabase.from('turnos_clinica')
-    .select('id_turno,especialidad,comentario_especialista,diagnostico,fecha,turnos_datos(altura,peso,temperatura,presion,dato_1,dato_2,dato_3)')
-    .eq('estado','Realizado')
-    .eq('id_paciente',dataPaciente?.id_paciente)
-    .eq('id_especialista',id_especialista)
+    const { data, error } = await this.supabaseService.supabase.from('turnos_clinica')
+      .select('id_turno,especialidad,comentario_especialista,diagnostico,fecha,turnos_datos(altura,peso,temperatura,presion,dato_1,dato_2,dato_3)')
+      .eq('estado', 'Realizado')
+      .eq('id_paciente', dataPaciente?.id_paciente)
+      .eq('id_especialista', id_especialista)
 
-    return {data}
+    return { data }
+  }
 
+  async subirIngreso(id: string) {
+    await this.supabaseService.supabase.from('ingresos_clinica')
+      .insert([{ id_usuario: id }])
 
   }
+
+  async traerStatIngreso() {
+    const { data } = await this.supabaseService.supabase.from('ingresos_clinica')
+      .select('id_ingreso,id_usuario,fecha,usuarios_clinica(name,sur_name)')
+      .order('fecha', { ascending: false });
+
+    return { data }
+  }
+
+
 
 }
