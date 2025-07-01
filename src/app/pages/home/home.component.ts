@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { RegisterComponent } from '../register/register.component';
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -8,31 +8,48 @@ import { AuthService } from '../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatabaseService } from '../../services/database.service';
 import { NgZone } from '@angular/core';
+import { NgxCaptchaModule } from 'ngx-captcha';
+
 
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, FormsModule, RouterModule, RegisterComponent, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, RouterModule, RegisterComponent, ReactiveFormsModule,NgxCaptchaModule],
   standalone: true,
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
 
+  captchaToken: string | null = null;
   registroAbierto = false;
+   protected aFormGroup: any;
   formLogin: FormGroup = new FormGroup({
     mail: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
   })
 
 
-  constructor(  private zone: NgZone,private supabaseAuth: AuthService, private router: Router, private snackBar: MatSnackBar, private dbService: DatabaseService) {
+  constructor(private formBuilder: FormBuilder,  private zone: NgZone,private supabaseAuth: AuthService, private router: Router, private snackBar: MatSnackBar, private dbService: DatabaseService) {
     this.dbService.registroOpen$.subscribe(abierto=>{
     this.zone.run(() => {
       this.registroAbierto = abierto;
     });
     })
   }
+
+
+handleSuccess(token: string): void {
+  this.captchaToken = token;
+}
+
+    ngOnInit() {
+      this.aFormGroup = this.formBuilder.group({
+        recaptcha: ['', Validators.required]
+      });
+    }
+
+
 
 
   llenarDatos(mail: string, password: string) {
@@ -46,7 +63,9 @@ export class HomeComponent {
   }
 
   async login() {
-    if (this.formLogin.valid) {
+    if (this.formLogin.valid && this.captchaToken !== null) {
+      console.log(this.captchaToken)
+      console.log("Formulario válido");
       const { data, error } = await this.supabaseAuth.logIn(this.formLogin.value.mail, this.formLogin.value.password);
 
       if (!error) {

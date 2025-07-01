@@ -1,4 +1,4 @@
-import { Component ,Input, OnDestroy} from '@angular/core';
+import { Component ,Input, OnDestroy, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -23,8 +23,9 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 
 
 
-export class RegisterComponent implements OnDestroy {
+export class RegisterComponent implements OnDestroy ,OnInit {
 
+   captchaToken: string = '';
   @Input() administrador: any;
   registroAbierto : boolean = false;
   userType: string = "";
@@ -76,6 +77,12 @@ export class RegisterComponent implements OnDestroy {
   }
 
 
+ngOnInit(): void {
+  (window as any).onTurnstileSuccess = (token: string) => {
+    this.captchaToken = token;
+    console.log("Captcha token:", this.captchaToken);
+  };
+}
   ngOnDestroy(): void {
     this.cerrar();
   }

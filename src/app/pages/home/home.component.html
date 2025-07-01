@@ -1,10 +1,11 @@
-<div *ngIf="registroAbierto"class="mdl-overlay">
+<div *ngIf="registroAbierto" class="mdl-overlay">
     <div class="mdl-content">
         <app-register [administrador]="false"></app-register>
     </div>
 </div>
 
-<div class="container-fluid d-flex justify-content-center align-items-center min-vh-100 bg-light-grey font-inter shadow-lg">
+<div
+    class="container-fluid d-flex justify-content-center align-items-center min-vh-100 bg-light-grey font-inter shadow-lg">
     <div class="row w-100 shadow-sm" style="max-width: 1200px; overflow: hidden; border-radius: 15px;">
         <div class="col-12 col-lg-6 bg-light-blue p-0 ">
             <div style="height: 40vh;">
@@ -55,8 +56,17 @@
                     </div>
                 </form>
 
+<form [formGroup]="aFormGroup">
+  <ngx-recaptcha2 #captchaElem
+    [siteKey]="'6LcrTnQrAAAAALkA7c0_CJoRCNh-ylzCXxSmWCY5'"
+    (success)="handleSuccess($event)"
+    [useGlobalDomain]="false"
+    formControlName="recaptcha">
+  </ngx-recaptcha2>
+</form>
                 <div class="d-flex justify-content-center">
-                    <button (click)="login()"style="width: 60%;" class="btn btn-light bg-light-blue text-white mt-5">Ingresar</button>
+                    <button (click)="login()" style="width: 60%;"
+                        class="btn btn-light bg-light-blue text-white mt-5">Ingresar</button>
                 </div>
 
                 <div class="d-flex align-items-center mt-5">
@@ -67,9 +77,12 @@
 
 
                 <div class="d-flex justify-content-center pt-4">
-                    <i (click)="llenarDatos('paciente_1@gmail.com','123123')"style="cursor: pointer;" class="bi bi-person-circle fs-1 px-2 "></i>
-                    <i (click)="llenarDatos('especialista_1@gmail.com','123123')"style="cursor: pointer;" class="bi bi-person-circle fs-1  px-2"></i>
-                    <i (click)="llenarDatos('admin_1@gmail.com','123123')"style="cursor: pointer;" class="bi bi-person-circle fs-1  px-2"></i>
+                    <i (click)="llenarDatos('paciente_1@gmail.com','123123')" style="cursor: pointer;"
+                        class="bi bi-person-circle fs-1 px-2 "></i>
+                    <i (click)="llenarDatos('especialista_1@gmail.com','123123')" style="cursor: pointer;"
+                        class="bi bi-person-circle fs-1  px-2"></i>
+                    <i (click)="llenarDatos('admin_1@gmail.com','123123')" style="cursor: pointer;"
+                        class="bi bi-person-circle fs-1  px-2"></i>
                 </div>
                 <p class="fw-bold mt-5 text-center">¿Aún no tienes cuenta? <a
                         style="cursor: pointer;text-decoration: underline;color:rgb(55, 154, 184)"
