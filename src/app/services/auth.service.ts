@@ -20,10 +20,8 @@ export class AuthService {
 
 
   constructor(private supabaseService: SupabaseService, private router: Router) {
-    console.log("Entre");
     const savedUser = localStorage.getItem('usuario');
     if (savedUser) {
-      console.log("hay")
       this.loginValido.next(true)
       const user = JSON.parse(savedUser);
       this.currentUserSubject.next(user); 

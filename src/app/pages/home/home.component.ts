@@ -7,6 +7,7 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { AuthService } from '../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatabaseService } from '../../services/database.service';
+import { NgZone } from '@angular/core';
 
 
 @Component({
@@ -25,9 +26,11 @@ export class HomeComponent {
   })
 
 
-  constructor(private supabaseAuth: AuthService, private router: Router, private snackBar: MatSnackBar, private dbService: DatabaseService) {
+  constructor(  private zone: NgZone,private supabaseAuth: AuthService, private router: Router, private snackBar: MatSnackBar, private dbService: DatabaseService) {
     this.dbService.registroOpen$.subscribe(abierto=>{
+    this.zone.run(() => {
       this.registroAbierto = abierto;
+    });
     })
   }
 
@@ -39,6 +42,7 @@ export class HomeComponent {
   }
   openRegister() {
     this.dbService.abrirRegistro();
+    console.log(this.registroAbierto)
   }
 
   async login() {

@@ -15,6 +15,7 @@ export class DatabaseService {
   }
   abrirRegistro() {
     this.registroOpenSubject.next(true);
+    console.log(this.registroOpen$)
   }
 
   cerrarRegistro() {

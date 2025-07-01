@@ -1,4 +1,4 @@
-import { Component ,Input} from '@angular/core';
+import { Component ,Input, OnDestroy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -7,6 +7,7 @@ import { DatabaseService } from '../../services/database.service';
 import { AuthService } from '../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+
 
 import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
@@ -22,7 +23,7 @@ import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angula
 
 
 
-export class RegisterComponent {
+export class RegisterComponent implements OnDestroy {
 
   @Input() administrador: any;
   registroAbierto : boolean = false;
@@ -65,15 +66,19 @@ export class RegisterComponent {
 
 
   constructor(private router: Router, private matDialog: MatDialog, private dbService: DatabaseService, private supabaseAuth: AuthService, private snackBar: MatSnackBar) {
-    this.dbService.registroOpen$.subscribe(abierto=>{
-      this.registroAbierto = abierto;
-    })
+    // this.dbService.registroOpen$.subscribe(abierto=>{
+    //   console.log("abierto");
+    //   this.registroAbierto = abierto;
+    // })
 
+    console.log("aaaa")
     
   }
 
 
-  
+  ngOnDestroy(): void {
+    this.cerrar();
+  }
   select(type: string) {
     this.selected = !this.selected
     this.userType = type;

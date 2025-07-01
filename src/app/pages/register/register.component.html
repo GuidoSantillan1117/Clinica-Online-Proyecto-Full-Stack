@@ -6,9 +6,9 @@
             class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex justify-content-center align-items-center z-3">
             <div class="bg-white rounded-4 shadow-lg p-5" style="width: 90%; max-width: 500px;">
                 <div class="text-end mb-4">
-                    <button (click)="cerrar()"class="btn btn-link text-black p-0 pe-2" aria-label="Cerrar">
-                <i class="bi bi-x-lg fs-4"></i>
-            </button>
+                    <button (click)="cerrar()" class="btn btn-link text-black p-0 pe-2" aria-label="Cerrar">
+                        <i class="bi bi-x-lg fs-4"></i>
+                    </button>
                 </div>
                 <h1 class="fw-bold text-center mb-3" style="color:#004aad;">Registro de Usuario</h1>
                 <p class="text-center text-secondary mb-4">
@@ -20,7 +20,8 @@
                         Paciente</button>
                     <button (click)="select('especialistas')" class="btn btn-outline-primary btn-lg w-100">🩺
                         Especialista</button>
-                    <button *ngIf="administrador"(click)="select('administradores')" class="btn btn-outline-primary btn-lg w-100">⚙️
+                    <button *ngIf="administrador" (click)="select('administradores')"
+                        class="btn btn-outline-primary btn-lg w-100">⚙️
                         Administrador</button>
                 </div>
             </div>
@@ -30,7 +31,7 @@
         }
         @else{
         <div class="bg-grey-blue text-white d-flex justify-content-between align-items-center p-2">
-            <button (click)="volver()" class="btn btn-link text-white p-0 ps-2"  aria-label="Volver">
+            <button (click)="volver()" class="btn btn-link text-white p-0 ps-2" aria-label="Volver">
                 <i class="bi bi-arrow-left fs-4"></i>
             </button>
 
@@ -43,7 +44,7 @@
                 }}
             </h1>
 
-            <button (click)="cerrar()"class="btn btn-link text-white p-0 pe-2" aria-label="Cerrar">
+            <button (click)="cerrar()" class="btn btn-link text-white p-0 pe-2" aria-label="Cerrar">
                 <i class="bi bi-x-lg fs-4"></i>
             </button>
         </div>
@@ -177,7 +178,7 @@
                                 <button [disabled]="especialidadesSeleccionadas.length === 4"
                                     (click)="addEspecialidad()" [class.d-none]="i !== 0 "
                                     style="cursor: pointer; font-size: 25px; margin-left: 5px; "
-                                    class=" btn bi bi-plus-circle text-white">
+                                    class=" btn bi bi-plus-circle ">
 
                                 </button>
                             </div>
@@ -190,7 +191,8 @@
                         <form [formGroup]="formDatosUsuario">
                             <div class="mt-3">
                                 <label class="form-label fw-bold text-white ">Correo</label>
-                                <input type="email" class="form-control" name="mail" placeholder="usuario@gmail.com" formControlName="mail">
+                                <input type="email" class="form-control" name="mail" placeholder="usuario@gmail.com"
+                                    formControlName="mail">
                                 <div class="mt-1"
                                     *ngIf="formDatosUsuario.get('mail')?.hasError('required') && formDatosUsuario.get('mail')?.touched">
                                     <small class="text-danger">El correo es obligatorio</small>
@@ -201,8 +203,8 @@
                                 </div>
                                 <div class="mt-3">
                                     <label class="form-label fw-bolder text-white">Contraseña</label>
-                                    <input type="password" placeholder="********"  class="form-control" name="password" required
-                                        formControlName="password">
+                                    <input type="password" placeholder="********" class="form-control" name="password"
+                                        required formControlName="password">
 
                                     <div class="mt-1"
                                         *ngIf="formDatosUsuario.get('password')?.hasError('required') && formDatosUsuario.get('password')?.touched">
@@ -221,6 +223,9 @@
                                 </div>
                             </div>
                         </form>
+                        <div class="cf-turnstile" data-sitekey="0x4AAAAAABjHRx4Abhya0TXf"
+                            data-callback="onTurnstileSuccess" data-theme="light">
+                        </div>
                         <button class="btn  bg-white btn-lg   my-3"
                             [disabled]="formDatosPersonales.invalid || formDatosUsuario.invalid"
                             (click)="register(userType)">Registrar</button>
