@@ -6,11 +6,12 @@ import { User } from '../../clases/User';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ModalHistorialComponent } from '../modal-historial/modal-historial.component';
+import { BordeDirective } from '../../../borde.directive';
 
 
 @Component({
   selector: 'app-pacientes',
-  imports: [FormsModule,CommonModule,ModalHistorialComponent],
+  imports: [FormsModule,CommonModule,ModalHistorialComponent,BordeDirective],
   standalone:true,
   templateUrl: './pacientes.component.html',
   styleUrl: './pacientes.component.css'
@@ -18,11 +19,12 @@ import { ModalHistorialComponent } from '../modal-historial/modal-historial.comp
 export class PacientesComponent {
 
   pacientes = signal<any[]>([]);
-  usuario: User | null = null;
   idPaciente : number | null = null;
   mostrarHistorial = false;
-
+  vacio = false;
+  
   historial:any;
+  usuario: User | null = null;
   private usuarioSub!: Subscription;
   constructor(private dbService: DatabaseService, private authService: AuthService) {
 
@@ -48,6 +50,11 @@ export class PacientesComponent {
         atendidos.push(paciente.id_paciente)
         pacientes.push(paciente);
       }
+    }
+
+    if(this.pacientes().length === 0)
+    {
+      this.vacio = true;
     }
 
     console.log(pacientes);

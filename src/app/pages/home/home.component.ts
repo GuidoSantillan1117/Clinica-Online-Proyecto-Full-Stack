@@ -25,6 +25,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 export class HomeComponent {
 
   cargando = false;
+  menuOpen = false;
   captchaToken: string | null = null;
   registroAbierto = false;
    protected aFormGroup: any;
@@ -65,6 +66,10 @@ handleSuccess(token: string): void {
     this.dbService.abrirRegistro();
   }
 
+  abrirMenu()
+  {
+    this.menuOpen = !this.menuOpen
+  }
   async login() {
     if (this.formLogin.valid && this.captchaToken !== null) {
       const { data, error } = await this.supabaseAuth.logIn(this.formLogin.value.mail, this.formLogin.value.password);

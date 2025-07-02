@@ -50,7 +50,7 @@ export class ModalElegirTurnoComponent implements OnInit {
     ngOnInit(){
     if(this.info.rol==='administrador')
       {
-        console.log("entre")
+
         this.tituloModal = "Seleccione un paciente"
         this.seleccionUsuario = true;
         this.traerPacientes()
@@ -60,7 +60,6 @@ export class ModalElegirTurnoComponent implements OnInit {
         this.seleccionEspecialidad = true;
     }
 
-    console.log(this.seleccionUsuario)
   }
 
   async traerPacientes()
@@ -80,7 +79,7 @@ export class ModalElegirTurnoComponent implements OnInit {
     this.tituloModal = "Seleccione una especialidad"
   }
   async elegirEspecialidad(especialidad: any) {
-    this.especialidadElegida = especialidad
+    this.especialidadElegida = especialidad.nombre;
     this.seleccionEspecialidad = false;
     this.mostrarDiasTurnos = true;
     this.tituloModal = "Seleccione el dia del turno"
@@ -119,7 +118,6 @@ export class ModalElegirTurnoComponent implements OnInit {
       this.diaElegido = fechaElegida
       const {data,error} = await this.dbService.verificarDisponibilidad(this.info.id_especialista,this.especialidadElegida,fechaElegida)
       this.tituloModal = "Seleccione la hora del turno"
-      console.log(data)
       if(data!?.length>0)
       {
         this.listaHorariosTomados = data

@@ -1,10 +1,11 @@
 import { CommonModule, } from '@angular/common';
 import { Component ,Input,Output,EventEmitter} from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { PipeMedidaPipe } from '../../../pipeMedida.pipe';
 
 @Component({
   selector: 'app-modal-historial',
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule,PipeMedidaPipe],
   standalone:true,
   templateUrl: './modal-historial.component.html',
   styleUrl: './modal-historial.component.css'

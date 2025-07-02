@@ -26,6 +26,11 @@ export class SolicitarTurnoComponent implements OnInit {
   usuario: User | null = null;
   turnoAbierto: boolean = false
 
+    imagenesEspecialidades = [{nombre:'kinesiologo',imagen:'/kinesiologo.jpg'},
+  {nombre:'dentista',imagen:'/dentista.jpg'},
+  {nombre:'ostetra',imagen:'/ostetra.jpg'},
+  {nombre:'pediatra',imagen:'/dentista.jpg'},
+]
   id_paciente : number = 0;
   private usuarioSub!: Subscription;
   private turnoAbiertoSub!:Subscription
@@ -70,8 +75,10 @@ export class SolicitarTurnoComponent implements OnInit {
   seleccionarEspecialista(especialista:any)
   {
     console.log(this.usuario?.rol)
-    let listaEspecialidades = [especialista.especialidad_1,especialista.especialidad_2,especialista.especialidad_3,especialista.especialidad_4]
-    listaEspecialidades = listaEspecialidades.filter(especialidad=>especialidad!==null)
+    let listaEspecialidades = [{nombre: especialista.especialidad_1,imagen:''},{nombre: especialista.especialidad_2,imagen:''},
+      {nombre:especialista.especialidad_3,imagen:''},{nombre: especialista.especialidad_4,imagen:''}]
+    listaEspecialidades = listaEspecialidades.filter(especialidad=>especialidad.nombre!==null)
+    this.agregarImagen(listaEspecialidades);
 
 
     const infoEspecialista = {especialidades:listaEspecialidades,
@@ -85,4 +92,21 @@ export class SolicitarTurnoComponent implements OnInit {
     this.informacionEspecialistaSeleccionado = infoEspecialista
     this.turnoInfoService.abrirTurno();
   }
+
+
+    agregarImagen(especialidades:any[])
+  {
+    for (let especialidad of especialidades)
+    {
+      const especialidadEncontrada = this.imagenesEspecialidades.find(e => e.nombre === especialidad.nombre.toLocaleLowerCase());
+      if(especialidadEncontrada)
+      {
+        especialidad.imagen = especialidadEncontrada.imagen;
+      }
+      else{
+        especialidad.imagen = '/white.png'; 
+      }
+    }
+  }
+  
 }

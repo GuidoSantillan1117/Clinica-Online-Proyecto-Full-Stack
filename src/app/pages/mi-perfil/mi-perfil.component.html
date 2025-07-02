@@ -14,7 +14,7 @@
     <div *ngIf="usuario?.rol === 'paciente' && historialUsuario"class="d-flex flex-column align-items-center justify-content-center mt-4"style="min-height: 50%;">
       
     
-    <div class="mt-5 w-100" *ngIf="mostrarHistorial">
+    <div class="mt-5 w-100" *ngIf="mostrarHistorial && !vacio">
         <h1 class="mb-4 text-white">Historial de turnos</h1>
         <table class="table table-bordered table-hover text-center align-middle ">
           <thead class="text-info">
@@ -53,6 +53,7 @@
           <button (click)="descargarPdfFiltrado()"class="mt-4 btn btn-lg bg-sky text-white">Descargar historial por especialista</button>
         </div>
       </div>
+      <h1 *ngIf="mostrarHistorial && vacio" class="text-white">No hay historial clínico disponible</h1>
     <div class="mt-5 text-center">
       <button (click)="cargarHistorial()" class="btn btn-primary btn-lg shadow">{{!mostrarHistorial ?  'Ver historial clínico'  : 'Cerrar historial'}}</button>
     </div>

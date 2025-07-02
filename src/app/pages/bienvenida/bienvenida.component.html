@@ -1,3 +1,38 @@
-<p>bienvenida works!</p>
-<h1>Bienvenido a MediQ</h1>
-<p>Estamos felices de que formes parte de nuestra comunidad.</p>
+<div class="text-center py-5 px-3 bg-light rounded shadow-sm d-flex justify-content-center flex-column" style="min-height: 90vh;">
+    <h1 class="display-4 fw-bold text-primary">¡Bienvenido {{usuario!.nombre}}!</h1>
+    <p class="lead mt-3 text-dark">
+        Nos alegra que formes parte de nuestra comunidad.
+    </p>
+    <p class="text-muted">
+        En MediQ trabajamos para brindarte una experiencia médica moderna, ágil y humana. Desde aquí podrás
+        gestionar tus turnos, acceder a tu historial clínico y comunicarte con nuestros profesionales de forma segura.
+    </p>
+    <p class="text-secondary fst-italic">Tu salud, nuestra prioridad.</p>
+
+    <div class="carrousel-main border rounded" style="height:50vh" >
+
+      <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner rounded shadow">
+          <div class="carousel-item active">
+            <img src="/dentista.jpg" class="d-block w-100" alt="Dentista" style="height: 100%;">
+          </div>
+          <div class="carousel-item">
+            <img src="/doctor.jpg" class="d-block w-100" alt="Doctor" style="height: 100%;">
+          </div>
+          <div class="carousel-item">
+            <img src="/kinesiologo.jpg" class="d-block w-100" alt="Kinesiólogo" style="height: 100%; ">
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Siguiente</span>
+        </button>
+      </div>
+      
+    </div>
+      
+</div>

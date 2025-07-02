@@ -1,60 +1,65 @@
-<div class="container-fluid d-flex flex-column p-0 m-0 bg-white " style="min-height:80vh; min-width: 40vw; ">
-    <div class="bg-grey-blue text-white d-flex justify-content-between align-items-center p-2">
-        @if(info.rol ==='administrador')
-        {
-            <button (click)="volver()" class="btn btn-link text-white p-0 ps-2"
-                [ngClass]="{ 'invisible': seleccionUsuario }" aria-label="Volver">
+<div class="container-fluid d-flex flex-column p-0 m-0 bg-white" style="min-height:80vh; min-width: 25vw; overflow-y: auto;" >
+    <div class="bg-grey-blue text-white d-flex justify-content-between align-items-center px-3" style="height: 8vh;">
+        <ng-container *ngIf="info.rol === 'administrador'">
+            <button (click)="volver()" class="btn btn-link text-white p-0" [ngClass]="{ 'invisible': seleccionUsuario }"
+                aria-label="Volver">
                 <i class="bi bi-arrow-left fs-4"></i>
             </button>
-        }
+        </ng-container>
 
-        @else if(info.rol ==='paciente') {
-                <button (click)="volver()" class="btn btn-link text-white p-0 ps-2"
-                [ngClass]="{ 'invisible': seleccionEspecialidad}" aria-label="Volver">
+        <ng-container *ngIf="info.rol === 'paciente'">
+            <button (click)="volver()" class="btn btn-link text-white p-0"
+                [ngClass]="{ 'invisible': seleccionEspecialidad }" aria-label="Volver">
                 <i class="bi bi-arrow-left fs-4"></i>
             </button>
-        }
+        </ng-container>
 
-        <h2 class="text-center">{{tituloModal}}</h2>
-        <button (click)="salir()" class="btn btn-link text-white p-0 pe-2" aria-label="Cerrar">
+        <h2 class="text-center flex-grow-1 m-0 fw-semibold" style="font-size: 1.4rem;">
+            {{ tituloModal }}
+        </h2>
+
+        <button (click)="salir()" class="btn btn-link text-white p-0" aria-label="Cerrar">
             <i class="bi bi-x-lg fs-4"></i>
         </button>
     </div>
 
-    @if(seleccionUsuario)
-    {
-    <div *ngFor="let paciente of listaPacientes">
-        <button (click)="seleccionarPaciente(paciente.id_paciente)"
-            class="btn btn bg-light-blue btn-light">{{paciente.usuarios_clinica.name}}
-            {{paciente.usuarios_clinica.sur_name}}</button>
+    <div class="bg-light-grey d-flex flex-column align-items-center justify-content-center px-4 py-3 gap-3"
+        style="height: 72vh; overflow-y: auto;">
+
+        <ng-container *ngIf="seleccionUsuario">
+            <button *ngFor="let paciente of listaPacientes" (click)="seleccionarPaciente(paciente.id_paciente)"
+                class="btn btn-outline-primary w-100 " style="height: 40px;">
+                {{ paciente.usuarios_clinica.name }} {{ paciente.usuarios_clinica.sur_name }}
+            </button>
+        </ng-container>
+
+<ng-container *ngIf="seleccionEspecialidad">
+  <button *ngFor="let especialidad of info.especialidades"
+          (click)="elegirEspecialidad(especialidad)"
+          class="btn btn-light bg-light-blue w-100 d-flex align-items-center gap-3 my-2 p-2 rounded shadow-sm"
+          style="text-align: left;">
+    
+    <img [src]="especialidad.imagen"
+         alt="Imagen especialidad"
+         style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%;">
+    
+    <span class="fs-5 fw-semibold text-white">{{ especialidad.nombre }}</span>
+  </button>
+</ng-container>
+
+        <ng-container *ngIf="mostrarDiasTurnos">
+            <button *ngFor="let dia of listaDias" style="height: 40px;" (click)="elegirHoraTurno(dia)"
+                class="btn btn-outline-primary w-100">
+                {{ dia.nombreDia | titlecase }} {{ dia.dia }}/{{ dia.mes }}
+            </button>
+        </ng-container>
+
+        <ng-container *ngIf="mostrarHorariosTurnos">
+            <button *ngFor="let hora of listaHorariosDisponibles" style="height: 40px;" (click)="enviarTurno(hora)"
+                [disabled]="verificarHorarioTomado(hora)" class="btn btn-outline-primary w-100">
+                {{ hora }}
+            </button>
+        </ng-container>
+
     </div>
-    }
-    @if(seleccionEspecialidad)
-    {
-    <div *ngFor="let especialidad of info.especialidades">
-        <button (click)="elegirEspecialidad(especialidad)"
-            class="btn btn bg-light-blue btn-light">{{especialidad}}</button>
-    </div>
-
-    }
-
-    @if(mostrarDiasTurnos)
-    {
-    <div class="d-flex flex-column">
-        <button class="btn btn-light bg-light-blue" *ngFor="let dia of listaDias" (click)='elegirHoraTurno(dia)'>
-            {{dia.nombreDia | titlecase}} {{dia.dia}}/{{dia.mes}}
-        </button>
-    </div>
-
-    }
-    @if(mostrarHorariosTurnos)
-    {
-    <button (click)="enviarTurno(hora)" [disabled]="verificarHorarioTomado(hora)" class="btn btn-light bg-light-blue"
-        *ngFor="let hora of listaHorariosDisponibles">
-        {{hora}}
-    </button>
-
-    }
-
-
 </div>

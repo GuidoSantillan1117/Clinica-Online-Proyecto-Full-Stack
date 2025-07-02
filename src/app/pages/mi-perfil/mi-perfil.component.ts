@@ -30,6 +30,7 @@ import { PipeMedidaPipe } from '../../../pipeMedida.pipe';
 
 export class MiPerfilComponent {
   mostrarHistorial = false;
+  vacio = false;
   idEspecialista : number | undefined;
   horaInicio : any;
   horaFinal : any;
@@ -62,8 +63,14 @@ export class MiPerfilComponent {
       const {data,error} = await this.dbService.cargarHistorialClinicoPaciente(this.usuario!.id)
       if(!error)
       {
-        this.historialUsuario = data
-        console.log(this.historialUsuario)
+        if(data?.length === 0)
+        {
+          this.vacio = true;
+        }
+        else{
+
+          this.historialUsuario = data
+        }
       }
 
     }

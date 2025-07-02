@@ -21,3 +21,62 @@
   max-width: 900px;
   overflow: hidden;
 }
+
+.fab-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fab {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.fab-menu {
+  position: fixed;
+  bottom: 80px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 1050;
+}
+
+.fab-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 50px;
+  padding: 8px 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.fab-option:hover {
+  background-color: #f0f0f0;
+}
+
+.fab-option img {
+  height: 40px;
+  width: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.fab-option span {
+  font-weight: 500;
+  color: #ffffff;
+}

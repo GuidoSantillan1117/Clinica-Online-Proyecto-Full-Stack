@@ -3,11 +3,34 @@
         <app-modal-historial [historial]="historial"(cerrar)="mostrarHistorial=false"></app-modal-historial>
     </div>
 </div>
-<div class="container-fluid d-flex justify-content-center align-items-center bg-light-grey" style="min-height: 90vh;">
-    <h1 *ngIf="pacientes.length===0">No hay pacientes atendidos</h1>
-    @for(paciente of pacientes();track paciente.id_paciente )
-    {
-        <img [src]="paciente.pacientes.usuarios_clinica.foto_perfil" width="50px">
-        <button (click)="abrirHistorial(paciente)"class="btn btn-lg btn-light bg-light-blue">{{paciente.pacientes.usuarios_clinica.name}}</button>
+<div class="container-fluid py-5 bg-light  bg-light-grey" style="min-height: 90vh;">
+  <h1 *ngIf="vacio"class="text-center text-primary mb-1 display-5">Aún no tienes ningun paciente </h1>
+  <div *ngIf="!vacio"class="text-center mb-4">
+    <h2 class="fw-bold text-primary display-5">Elegí el paciente</h2>
+    <p class="text-secondary fs-5">Seleccioná un paciente para ver tu historial con el</p>
+  </div>
+
+
+
+    <div *ngIf="!vacio"class="row justify-content-center g-2 mt-4">
+    @for (paciente of pacientes();track paciente.id_paciente) {
+      <div class="col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center">
+        <div class="card shadow border-0 text-center p-3 bg-light-blue" style="max-width: 250px; border-radius: 20px;">
+          <h5 class="fw-bold text-white mb-3">
+            Paciente <br>
+            {{ paciente.pacientes.usuarios_clinica.name }}
+          </h5>
+
+          <button appBorde 
+                  (click)="abrirHistorial(paciente)"
+                  class="rounded-circle overflow-hidden  shadow-sm mx-auto"
+                  style="border:none;width: 200px; height: 200px; background: none;">
+            <img [src]="paciente.pacientes.usuarios_clinica.foto_perfil"
+                 class="w-100 h-100 object-fit-cover rounded-circle"
+                 alt="Foto de perfil" />
+          </button>
+        </div>
+      </div>
     }
+  </div>
 </div>

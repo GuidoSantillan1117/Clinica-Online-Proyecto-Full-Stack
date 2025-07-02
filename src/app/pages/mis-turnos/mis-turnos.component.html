@@ -2,10 +2,11 @@
     @if(tipoUsuario === 'paciente')
     {
     <div class="d-flex flex-column w-100 align-items-center justify-content-center ">
-        <h1 class="text-center mb-1 display-5">Tus turnos</h1>
+        <h1 *ngIf="vacio"class="text-center text-primary mb-1 display-5">No se encontraron turnos </h1>
+        <h1 *ngIf="!vacio && !filtro"class="text-center text-primary mb-1 display-5">Tus turnos </h1>
     </div>
 
-    <div class="d-flex flex-column align-items-end w-100 mb-3 pe-4 ">
+    <div *ngIf="!vacio" class="d-flex flex-column align-items-end w-100 mb-3 pe-4 ">
         <div class="d-flex align-items-center gap-2 w-100" style="max-width: 400px;">
             <input [(ngModel)]="filtroValor" name="filtroValor" type="text"
                 placeholder="Buscar por especialista o especialidad" class="form-control w-100">
@@ -14,7 +15,7 @@
                 style="border-radius: 10px; border: none; height: 40px;">Buscar</button>
 
         </div>
-        <div *ngIf="filtro" class="d-flex align-items-center mt-2 px-2 py-1 rounded"
+        <div *ngIf="filtro && !vacio" class="d-flex align-items-center mt-2 px-2 py-1 rounded"
             style="background-color: lightblue; font-size: 14px; max-width: 400px;">
             <span class="me-auto fw-bold">{{ filtroValorActual }}</span>
             <i (click)="borrarFiltro()" class="bi bi-x-lg text-danger" role="button"></i>
@@ -54,7 +55,7 @@
             </div>
 
             <div class="mt-5 p-4 bg-white rounded shadow-sm text-black" *ngIf="turno.diagnostico !== null && turno.boton_diagnostico_presionado">
-                <h5 class="fw-bold text-center text-primary mb-3" style="font-size: 1.5rem;">
+                <h5 class="fw-bold text-center text-primary mb-3" style="font-size: 1.5rem; ">
                     Diagnóstico
                 </h5>
 
@@ -140,11 +141,10 @@
     }
     @else {
 
-    <div class="d-flex flex-column w-100 align-items-center justify-content-center ">
-        <h2 class="text-center display-5">Tus turnos asignados</h2>
-    </div>
+        <h1 *ngIf="vacio"class="text-center text-primary mb-1 display-5">No se encontraron turnos </h1>
+        <h1 *ngIf="!vacio && !filtro"class="text-center text-primary mb-1 display-5">Tus turnos asignados </h1>
 
-    <div class="d-flex flex-column align-items-end w-100 mb-3 p-4">
+    <div *ngIf="!vacio"class="d-flex flex-column align-items-end w-100 mb-3 p-4">
         <div class="d-flex align-items-center gap-2 w-100" style="max-width: 400px;">
             <input [(ngModel)]="filtroValor" name="filtroValor" type="text"
                 placeholder="Buscar por paciente o especialidad" class="form-control w-100">
@@ -152,7 +152,7 @@
                 class="btn btn-light btn-m bg-light-blue text-white px-3"
                 style="border-radius: 10px; border: none; height: 40px;">Buscar</button>
         </div>
-        <div *ngIf="filtro" class="d-flex align-items-center mt-2 px-2 py-1 rounded bg-light-blue text-white"
+        <div *ngIf="filtro && !vacio" class="d-flex align-items-center mt-2 px-2 py-1 rounded bg-light-blue text-white"
             style="font-size: 14px; max-width: 400px;">
             <span class="me-auto fw-bold">{{ filtroValorActual }}</span>
             <i (click)="borrarFiltro()" class="bi bi-x-lg text-danger" role="button"></i>

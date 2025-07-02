@@ -38,6 +38,7 @@ export class MisTurnosComponent implements OnInit, OnDestroy {
   filtroValor: string = '';
   noCoincide = false;
   cantidadCoincidencias: number = 0;
+  vacio = false;
 
 
   private usuarioSub!: Subscription;
@@ -152,6 +153,11 @@ export class MisTurnosComponent implements OnInit, OnDestroy {
           this.turnos.set(data);
         }
       }
+    }
+    if(this.turnos().length === 0)
+    {
+      this.vacio = true;
+      console.log(this.vacio)
     }
   }
 

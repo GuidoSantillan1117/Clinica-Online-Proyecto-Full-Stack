@@ -7,6 +7,44 @@
         </div>
     </div>
 
+
+<div class="fab-container">
+  <button class="fab" (click)="abrirMenu()"><i class="bi bi-person"></i>
+</button>
+
+<div class="fab-menu" *ngIf="menuOpen">
+  <button class="fab-option" (click)="llenarDatos('paciente_1@gmail.com','123123')">
+    <img src="https://erhgilcaucwjusnnjrar.supabase.co/storage/v1/object/public/perfil/perfil_1749043391545" alt="Paciente 1">
+    <span>Paciente 1</span>
+  </button>
+
+  <button class="fab-option" (click)="llenarDatos('paciente_2@gmail.com','123123')">
+    <img src="https://erhgilcaucwjusnnjrar.supabase.co/storage/v1/object/public/perfil/perfil_1748952860844" alt="Paciente 2">
+    <span>Paciente 2</span>
+  </button>
+
+  <button class="fab-option" (click)="llenarDatos('paciente_3@gmail.com','123123')">
+    <img src="https://erhgilcaucwjusnnjrar.supabase.co/storage/v1/object/public/perfil/perfil_1748952927922" alt="Paciente 3">
+    <span>Paciente 3</span>
+  </button>
+
+  <button class="fab-option" (click)="llenarDatos('especialista_1@gmail.com','123123')">
+    <img src="https://erhgilcaucwjusnnjrar.supabase.co/storage/v1/object/public/perfil/perfil_1749044869079" alt="Especialista 1">
+    <span>Especialista 1</span>
+  </button>
+
+  <button class="fab-option" (click)="llenarDatos('especialista4@gmail.com','123123')">
+    <img src="https://erhgilcaucwjusnnjrar.supabase.co/storage/v1/object/public/perfil/perfil_1749513675076" alt="Especialista 2">
+    <span>Especialista 2</span>
+  </button>
+
+  <button class="fab-option" (click)="llenarDatos('admin_1@gmail.com','123123')">
+    <img src="https://erhgilcaucwjusnnjrar.supabase.co/storage/v1/object/public/perfil/perfil_1748873962316" alt="Administrador">
+    <span>Administrador</span>
+  </button>
+</div>
+</div>
+
     <div
         class="container-fluid d-flex justify-content-center align-items-center min-vh-100 bg-light-grey font-inter shadow-lg">
         <div class="row w-100 shadow-sm" style="max-width: 1200px; overflow: hidden; border-radius: 15px;">
@@ -71,19 +109,10 @@
 
                     <div class="d-flex align-items-center mt-5">
                         <hr class="flex-grow-1">
-                        <span class="mx-3 text-xbox-gray ">Acceso rápido</span>
+                        <span class="mx-3 text-xbox-gray ">Registrarse</span>
                         <hr class="flex-grow-1">
                     </div>
 
-
-                    <div class="d-flex justify-content-center pt-4">
-                        <i (click)="llenarDatos('paciente_1@gmail.com','123123')" style="cursor: pointer;"
-                            class="bi bi-person-circle fs-1 px-2 "></i>
-                        <i (click)="llenarDatos('especialista_1@gmail.com','123123')" style="cursor: pointer;"
-                            class="bi bi-person-circle fs-1  px-2"></i>
-                        <i (click)="llenarDatos('admin_1@gmail.com','123123')" style="cursor: pointer;"
-                            class="bi bi-person-circle fs-1  px-2"></i>
-                    </div>
                     <p class="fw-bold mt-5 text-center">¿Aún no tienes cuenta? <a
                             style="cursor: pointer;text-decoration: underline;color:rgb(55, 154, 184)"
                             (click)="openRegister()">Clickea aquí</a></p>
