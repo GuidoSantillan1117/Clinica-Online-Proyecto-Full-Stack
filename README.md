@@ -1,59 +1,23 @@
-# Parcial2
+# 🏥 MediQ - Clínica Online Quintero
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.13.
+**MediQ** es una plataforma web desarrollada para la Clínica Online Quintero, que permite una gestión médica moderna, rápida y eficiente, conectando pacientes, especialistas y administradores en un solo sistema.
 
-## Development server
+## 👥 Funcionalidades principales
 
-To start a local development server, run:
+### 🧑‍⚕️ Pacientes
+- Registro con selección de obra social.
+- Solicitud de turnos según disponibilidad de especialistas.
+- Acceso a su historial clínico personal.
+- Visualización de datos médicos y reseñas de turnos anteriores.
 
-```bash
-ng serve
-```
+### 👨‍⚕️ Especialistas
+- Registro con selección de hasta 4 especialidades.
+- Configuración de días y horarios de atención.
+- Gestión de turnos asignados.
+- Acceso al historial clínico de sus pacientes atendidos.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### 👩‍💼 Administradores
+- Alta de nuevos turnos en nombre de pacientes.
+- Aprobación o rechazo de registros de especialistas.
+- Acceso a estadísticas generales de la clínica.
+- Mayor nivel de permisos y control sobre el sistema.
