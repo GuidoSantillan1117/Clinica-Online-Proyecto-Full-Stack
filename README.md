@@ -1,6 +1,8 @@
 # 🏥 MediQ - Clínica Online Quintero
 
 ![Foto de perfil](https://erhgilcaucwjusnnjrar.supabase.co/storage/v1/object/public/perfil//favicon.png)
+
+
 **MediQ** es una plataforma web desarrollada para la Clínica Online Quintero, que permite una gestión médica moderna, rápida y eficiente, conectando pacientes, especialistas y administradores en un solo sistema.
 
 ## 👥 Funcionalidades principales
