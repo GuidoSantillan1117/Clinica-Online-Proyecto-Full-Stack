@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Pipe } from '@angular/core';
 import { signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule,TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { DatabaseService } from '../../services/database.service';
@@ -14,10 +14,15 @@ import { ValoracionDialogComponent } from '../../valoracion-dialog/valoracion-di
 import { DiagnosticoDialogComponent } from '../../diagnostico-dialog/diagnostico-dialog.component';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { SupabaseService } from '../../services/supabase.service';
+import { PipeEdadPipe } from '../../../pipeEdad.pipe';
+import { ZoomDirective } from '../../../zoom.directive';
+import { PipeMedidaPipe } from '../../../pipeMedida.pipe';
+import { PipeGeneroPipe } from '../../../pipeGenero.pipe';
+
 
 @Component({
   selector: 'app-mis-turnos',
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule,PipeEdadPipe,ZoomDirective,TitleCasePipe,PipeMedidaPipe,PipeGeneroPipe],
   standalone: true,
   templateUrl: './mis-turnos.component.html',
   styleUrl: './mis-turnos.component.css'
@@ -87,18 +92,26 @@ export class MisTurnosComponent implements OnInit, OnDestroy {
     const filtrados = [];
     const filtrado = this.filtroValor
 
-    const nombre = this.tipoUsuario === 'paciente' ? 'paciente' : 'especialista';
     this.filtro = true;
     this.filtroValorActual = filtrado;
 
     for (let turno of this.turnos()) {
       if (this.tipoUsuario === 'paciente') {
+        if(turno.turnos_datos.length > 0 && ((turno.turnos_datos[0].dato_3 && (turno.turnos_datos[0].dato_3.clave == filtrado ||turno.turnos_datos[0].dato_3.valor == filtrado  )) ||(turno.turnos_datos[0].dato_2 && (turno.turnos_datos[0].dato_2.clave == filtrado ||turno.turnos_datos[0].dato_2.valor == filtrado )) ||(turno.turnos_datos[0].dato_1 && (turno.turnos_datos[0].dato_1.clave == filtrado ||turno.turnos_datos[0].dato_1.valor == filtrado  ))||turno.turnos_datos[0].altura == filtrado|| turno.turnos_datos[0].peso == filtrado|| turno.turnos_datos[0].temperatura == filtrado|| turno.turnos_datos[0].presion == filtrado))
+        {
+          filtrados.push(turno);
+        }
         if (turno.especialistas.usuarios_clinica.name.toLocaleLowerCase() === filtrado.toLocaleLowerCase() || turno.especialidad.toLocaleLowerCase() === filtrado.toLocaleLowerCase()) {
           filtrados.push(turno);
         }
 
       }
       else {
+        if(turno.turnos_datos.length > 0 && ((turno.turnos_datos[0].dato_3 && (turno.turnos_datos[0].dato_3.clave == filtrado ||turno.turnos_datos[0].dato_3.valor == filtrado  )) ||(turno.turnos_datos[0].dato_2 && (turno.turnos_datos[0].dato_2.clave == filtrado ||turno.turnos_datos[0].dato_2.valor == filtrado )) ||(turno.turnos_datos[0].dato_1 && (turno.turnos_datos[0].dato_1.clave == filtrado ||turno.turnos_datos[0].dato_1.valor == filtrado  ))||turno.turnos_datos[0].altura == filtrado|| turno.turnos_datos[0].peso == filtrado|| turno.turnos_datos[0].temperatura == filtrado|| turno.turnos_datos[0].presion == filtrado))
+
+        {
+          filtrados.push(turno);
+        }
         if (turno.pacientes.usuarios_clinica.name.toLocaleLowerCase() === filtrado.toLocaleLowerCase() || turno.especialidad.toLocaleLowerCase() === filtrado.toLocaleLowerCase()) {
           filtrados.push(turno);
         }
@@ -127,12 +140,15 @@ export class MisTurnosComponent implements OnInit, OnDestroy {
       if (this.tipoUsuario === 'paciente') {
         const { data, error } = await this.dbService.cargarTurnosPaciente(this.idUsuario, this.tipoUsuario!);
         if (!error && data) {
+          console.log(data)
           this.turnos.set(data);
         }
       }
       else {
         const { data, error } = await this.dbService.cargarTurnosEspecialista(this.idUsuario, this.tipoUsuario!);
+        console.log(data)
         if (!error && data) {
+          console.log(data)
           this.turnos.set(data);
         }
       }

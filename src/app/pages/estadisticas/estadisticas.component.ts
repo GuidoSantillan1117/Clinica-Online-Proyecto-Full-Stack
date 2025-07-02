@@ -10,12 +10,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { utils, writeFileXLSX } from 'xlsx'
-
+import { ResaltarDirective } from '../../../resaltar.directive';
 
 
 @Component({
   selector: 'app-estadisticas',
-  imports: [CommonModule, FormsModule, NgxChartsModule, GraficosComponent, MatDatepickerModule, MatFormFieldModule, MatNativeDateModule, MatInputModule],
+  imports: [CommonModule, FormsModule, NgxChartsModule, GraficosComponent,ResaltarDirective, MatDatepickerModule, MatFormFieldModule, MatNativeDateModule, MatInputModule],
   providers: [MatDatepickerModule],
   standalone: true,
   templateUrl: './estadisticas.component.html',

@@ -16,13 +16,13 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { Pipe } from '@angular/core';
 
-import { DatePipe } from '@angular/common';
 import { PdfService } from '../../services/pdf.service';
+import { PipeMedidaPipe } from '../../../pipeMedida.pipe';
 
 
 @Component({
   selector: 'app-mi-perfil',
-  imports: [CommonModule, FormsModule, RouterModule,TitleCasePipe,MatFormFieldModule,MatInputModule,DatePipe],
+  imports: [CommonModule, FormsModule, RouterModule,TitleCasePipe,MatFormFieldModule,MatInputModule,PipeMedidaPipe],
   standalone: true,
   templateUrl: './mi-perfil.component.html',
   styleUrl: './mi-perfil.component.css'

@@ -5,14 +5,14 @@
 </div>
 
 <div class="container-fluid d-flex flex-column min-vh-100">
-    <h1 class="text-center my-3">{{!historial ? 'Usuarios' : 'Historial'}}</h1>
-    <h4 class="text-center mb-1">{{!historial ? 'Lista de usuarios registrados en el sistema.' : 'Registro de los turnos finalizados'}}</h4>
+    <h1 class="fw-bold text-primary text-center my-3">{{!historial ? 'Usuarios' : 'Historial'}}</h1>
+    <h4 class="text-secondary text-center mb-1">{{!historial ? 'Lista de usuarios registrados en el sistema.' : 'Registro de los turnos finalizados'}}</h4>
 
       <div class="d-flex justify-content-center gap-2 my-3">
-      <button (click)="mostrarHistorial(false)"class="btn btn-light btn-sm bg-dark text-white p-2" style="border-radius: 15px;font-size: 16px;">
+      <button (click)="mostrarHistorial(false)"class="btn btn-light btn-sm bg-primary text-white p-2" style="border-radius: 15px;font-size: 16px;">
         Mostrar listado
       </button>
-      <button (click)="mostrarHistorial(true)"class="btn btn-light btn-sm bg-dark text-white p-2" style="border-radius: 15px;font-size: 16px;" >
+      <button (click)="mostrarHistorial(true)"class="btn btn-light btn-sm bg-primary text-white p-2" style="border-radius: 15px;font-size: 16px;" >
         Mostrar historial
       </button>
     </div>
@@ -38,7 +38,7 @@
     </div>
 
     @for (u of usuarios(); track u.id) {
-    <div class="grid w-100 border-bottom">
+    <div  appResaltar class="grid w-100 border-bottom">
       <div class="row align-items-center p-2">
         <div class="col-2 text-center">
           {{u.rol.toLocaleUpperCase()}}

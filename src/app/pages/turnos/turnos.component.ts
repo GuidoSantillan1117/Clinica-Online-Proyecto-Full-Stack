@@ -9,10 +9,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ComentarioDialogComponent } from '../../comentario-dialog/comentario-dialog.component';
+import { ResaltarDirective } from '../../../resaltar.directive';
 
 @Component({
   selector: 'app-turnos',
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule,ResaltarDirective],
   standalone: true,
   templateUrl: './turnos.component.html',
   styleUrl: './turnos.component.css'

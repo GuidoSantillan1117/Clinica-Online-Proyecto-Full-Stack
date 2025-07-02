@@ -1,25 +1,35 @@
-<div *ngIf="turnoAbierto"class="mdl-overlay">
-    <div class="mdl-content">
-        <app-modal-elegir-turno [info]="informacionEspecialistaSeleccionado"></app-modal-elegir-turno>
-    </div>
+<!-- Overlay del modal -->
+<div *ngIf="turnoAbierto" class="mdl-overlay">
+  <div class="mdl-content">
+    <app-modal-elegir-turno [info]="informacionEspecialistaSeleccionado"></app-modal-elegir-turno>
+  </div>
 </div>
 
-<div class="container-fluid d-flex flex-column justify-content-center">
-    <div class="grid">
-        <div class="row">
-            @for(especialista of especialistas();track especialista.id)
-            {
-            <div class="col-4 mt-5">
-                <div class="p-2 text-black rounded d-flex flex-column w-50 align-items-center justify-content-center">
-                    <h5 class="fw-bold">Dr. {{ especialista.usuarios_clinica.name }} {{ especialista.usuarios_clinica.sur_name }}</h5>
+<div class="container-fluid py-5 bg-light min-vh-100 bg-light-grey">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold text-primary display-5">Elegí tu Especialista</h2>
+    <p class="text-secondary fs-5">Seleccioná un profesional para ver sus turnos disponibles</p>
+  </div>
 
-                    <button (click)='seleccionarEspecialista(especialista)'class="rounded-circle border-0 p-0 overflow-hidden"style="width: 200px; height: 200px; background: none;">
-                        <img [src]="especialista.usuarios_clinica.foto_perfil" class="w-100 h-100 object-fit-cover"alt="foto perfil"/>
-                    </button>
-                </div>
-            </div>
+  <div class="row justify-content-center g-2">
+    @for (especialista of especialistas(); track especialista.id) {
+      <div class="col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center">
+        <div class="card shadow border-0 text-center p-3" style="max-width: 250px; border-radius: 20px;">
+          <h5 class="fw-bold text-dark mb-3">
+            {{ especialista.usuarios_clinica.name | pipeGenero:especialista.usuarios_clinica.genero }}
+            {{ especialista.usuarios_clinica.sur_name }}
+          </h5>
 
-            }
+          <button appBorde 
+                  (click)="seleccionarEspecialista(especialista)"
+                  class="rounded-circle overflow-hidden  shadow-sm mx-auto"
+                  style="width: 200px; height: 200px; background: none;">
+            <img [src]="especialista.usuarios_clinica.foto_perfil"
+                 class="w-100 h-100 object-fit-cover rounded-circle"
+                 alt="Foto de perfil" />
+          </button>
         </div>
-    </div>
+      </div>
+    }
+  </div>
 </div>

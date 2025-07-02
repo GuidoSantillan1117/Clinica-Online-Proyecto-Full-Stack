@@ -1,16 +1,16 @@
 <div class="container-fluid d-flex flex-column min-vh-100  ">
     <div class="p-3 ">
         <div class="d-flex flex-column w-100 align-items-center justify-content-center mb-4">
-            <h1 class="text-center mb-2">{{mostrarGrafico ? 'Estadisticas' : 'Ingresos'}}</h1>
-            <h4 class="text-center mb-1">{{mostrarGrafico ? 'Gráficos de los turnos del sistema' : 'Lista de los ingresos en el sistema'}}</h4>
+            <h1 class="text-center mb-2 fw-bold text-primary">{{mostrarGrafico ? 'Estadisticas' : 'Ingresos'}}</h1>
+            <h4 class="text-secondary text-center mb-1">{{mostrarGrafico ? 'Gráficos de los turnos del sistema' : 'Lista de los ingresos en el sistema'}}</h4>
         </div>
 
         <div class="my-3 d-flex justify-content-center gap-2">
-            <button (click)="mostrarEstadisticas(false)" class="btn btn-light btn-sm bg-dark text-white p-2"
+            <button (click)="mostrarEstadisticas(false)" class="btn btn-light btn-sm bg-primary text-white p-2"
                 style="border-radius: 15px;font-size: 16px;">
                 Ingresos al sistema
             </button>
-            <button (click)="mostrarEstadisticas(true)" class="btn btn-light btn-sm bg-dark text-white p-2"
+            <button (click)="mostrarEstadisticas(true)" class="btn btn-light btn-sm bg-primary text-white p-2"
                 style="border-radius: 15px;font-size: 16px; ">
                 Estadisticas de los turnos
             </button>
@@ -26,7 +26,7 @@
             </div>
 
             @for (ingreso of ingresos (); track ingreso.id_ingreso) {
-            <div class="grid w-100 border-bottom">
+            <div appResaltar class="grid w-100 border-bottom">
                 <div class="row align-items-center p-2">
                     <div class="col-3 text-center">
                         {{ingreso.fecha | date:'short'}}

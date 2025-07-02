@@ -11,6 +11,10 @@ body {
   background-color: rgb(51, 65, 110)
 }
 
+.bg-sky{
+  background-color: rgb(131, 183, 243)
+}
+
 
 .bg-light-grey{
   background-color: rgb(205, 213, 216);
@@ -22,9 +26,9 @@ body {
 
 .snackbar-bienvenido
 {
-  background-color:#004aad;
+  background-color:#ffffff;
   text-align: center;
-  color:white;
+  color:#004aad;
 }
 
 button:disabled {

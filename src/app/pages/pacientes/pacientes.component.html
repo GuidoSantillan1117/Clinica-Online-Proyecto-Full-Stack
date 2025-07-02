@@ -3,7 +3,8 @@
         <app-modal-historial [historial]="historial"(cerrar)="mostrarHistorial=false"></app-modal-historial>
     </div>
 </div>
-<div class="container-fluid d-flex justify-content-center align-items-center">
+<div class="container-fluid d-flex justify-content-center align-items-center bg-light-grey" style="min-height: 90vh;">
+    <h1 *ngIf="pacientes.length===0">No hay pacientes atendidos</h1>
     @for(paciente of pacientes();track paciente.id_paciente )
     {
         <img [src]="paciente.pacientes.usuarios_clinica.foto_perfil" width="50px">

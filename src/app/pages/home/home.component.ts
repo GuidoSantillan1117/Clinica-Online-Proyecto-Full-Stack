@@ -9,18 +9,22 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DatabaseService } from '../../services/database.service';
 import { NgZone } from '@angular/core';
 import { NgxCaptchaModule } from 'ngx-captcha';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+
+
 
 
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, FormsModule, RouterModule, RegisterComponent, ReactiveFormsModule,NgxCaptchaModule],
+  imports: [CommonModule, FormsModule, RouterModule, RegisterComponent, ReactiveFormsModule,NgxCaptchaModule,MatProgressSpinnerModule],
   standalone: true,
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
 
+  cargando = false;
   captchaToken: string | null = null;
   registroAbierto = false;
    protected aFormGroup: any;
@@ -59,13 +63,10 @@ handleSuccess(token: string): void {
   }
   openRegister() {
     this.dbService.abrirRegistro();
-    console.log(this.registroAbierto)
   }
 
   async login() {
     if (this.formLogin.valid && this.captchaToken !== null) {
-      console.log(this.captchaToken)
-      console.log("Formulario válido");
       const { data, error } = await this.supabaseAuth.logIn(this.formLogin.value.mail, this.formLogin.value.password);
 
       if (!error) {
@@ -73,12 +74,9 @@ handleSuccess(token: string): void {
           await this.dbService.obtenerEstadoEspecialista(data.user?.id);
 
         if (errorEspecialista || !dataEspecialista || dataEspecialista.estado === 'Aprobado') {
-          this.snackBar.open("Bienvenido a MediQ", '', {
-            duration: 3000,
-            panelClass: ['snackbar-bienvenido']
-          });
+          this.cargando = true;
           setTimeout(() => {
-            
+            this.cargando = false;
             this.supabaseAuth.validarLogin();
             this.dbService.subirIngreso(data.user?.id)
             localStorage.setItem('usuario', JSON.stringify(data.user));

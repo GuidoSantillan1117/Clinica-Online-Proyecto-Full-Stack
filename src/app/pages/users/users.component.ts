@@ -7,11 +7,12 @@ import { User } from '../../clases/User';
 import { RegisterComponent } from '../register/register.component';
 import { PdfService } from '../../services/pdf.service';
 import { utils, writeFileXLSX } from 'xlsx'
+import { ResaltarDirective } from '../../../resaltar.directive';
 
 
 @Component({
   selector: 'app-users',
-  imports: [CommonModule, FormsModule, RegisterComponent],
+  imports: [CommonModule, FormsModule, RegisterComponent,ResaltarDirective],
   standalone: true,
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'

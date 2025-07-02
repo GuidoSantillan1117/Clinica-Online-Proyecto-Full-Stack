@@ -185,7 +185,7 @@ export class DatabaseService {
 
     const { data, error } = await this.supabaseService.supabase
       .from('turnos_clinica')
-      .select(`id_turno, id_especialista, estado, comentario_especialista,encuesta_paciente, comentario_paciente,diagnostico,calificacion, especialidad, fecha, hora, especialistas(id, usuarios_clinica(name, sur_name))`)
+      .select(`id_turno, id_especialista, estado, comentario_especialista,encuesta_paciente, comentario_paciente,diagnostico,calificacion, especialidad, fecha, hora, turnos_datos(altura,peso,temperatura,presion,dato_1,dato_2,dato_3),especialistas(id, usuarios_clinica(name, sur_name,age,genero))`)
       .eq('id_paciente', dataPaciente!.id_paciente)
       .order('fecha', { ascending: false });
 
@@ -207,7 +207,7 @@ export class DatabaseService {
 
     const { data, error } = await this.supabaseService.supabase
       .from('turnos_clinica')
-      .select(`id_turno, id_paciente, estado, comentario_especialista, comentario_paciente,encuesta_paciente, calificacion, especialidad, fecha, hora, pacientes(id, usuarios_clinica(name, sur_name,dni))`)
+      .select(`id_turno, id_paciente, estado, comentario_especialista, diagnostico,comentario_paciente,encuesta_paciente, calificacion, especialidad, fecha, hora,turnos_datos(altura,peso,temperatura,presion,dato_1,dato_2,dato_3), pacientes(id, usuarios_clinica(name, sur_name,dni,age))`)
       .eq('id_especialista', dataEspecialista!.id_especialista)
       .order('fecha', { ascending: false });
 
@@ -324,7 +324,7 @@ export class DatabaseService {
 
   async traerDatosEspecialistas() {
     const { data, error } = await this.supabaseService.supabase.from('especialistas')
-      .select('id_especialista,id,especialidad_1,especialidad_2,especialidad_3,especialidad_4,usuarios_clinica(name,sur_name,foto_perfil)')
+      .select('id_especialista,id,especialidad_1,especialidad_2,especialidad_3,especialidad_4,usuarios_clinica(name,sur_name,foto_perfil,genero)')
       .eq('estado', 'Aprobado')
 
     return { data, error }

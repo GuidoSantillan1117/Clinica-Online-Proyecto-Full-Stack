@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { MiPerfilComponent } from './pages/mi-perfil/mi-perfil.component';
 
 export const routes: Routes = [
   {
@@ -29,6 +30,7 @@ export const routes: Routes = [
     path: 'bienvenida',
     loadComponent: () =>
       import('./pages/bienvenida/bienvenida.component').then((m) => m.BienvenidaComponent),
+      data:{animation: 'BienvenidaPage'}
   }
 ,
     {
@@ -54,6 +56,7 @@ export const routes: Routes = [
     path: 'mi-perfil',
     loadComponent: () =>
       import('./pages/mi-perfil/mi-perfil.component').then((m) => m.MiPerfilComponent),
+      data:{animation: 'MiPerfilPage'}
   },
     {
     title: "Solicitar turno",

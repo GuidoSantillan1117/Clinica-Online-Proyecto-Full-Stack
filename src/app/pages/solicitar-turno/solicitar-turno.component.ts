@@ -10,10 +10,12 @@ import { AuthService } from '../../services/auth.service';
 import { User } from '../../clases/User';
 import { TurnoInfoService } from '../../turno-info.service';
 import { ModalElegirTurnoComponent } from '../../modal-elegir-turno/modal-elegir-turno.component';
+import { PipeGeneroPipe } from '../../../pipeGenero.pipe';
+import { BordeDirective } from '../../../borde.directive';
 
 @Component({
   selector: 'app-solicitar-turno',
-  imports: [CommonModule, FormsModule, RouterModule,ModalElegirTurnoComponent],
+  imports: [CommonModule, FormsModule, RouterModule,ModalElegirTurnoComponent,PipeGeneroPipe,BordeDirective],
   standalone: true,
   templateUrl: './solicitar-turno.component.html',
   styleUrl: './solicitar-turno.component.css'
@@ -58,6 +60,7 @@ export class SolicitarTurnoComponent implements OnInit {
   async traerEspecialistas()
   {
     const {data,error} = await this.dbService.traerDatosEspecialistas()
+    console.log(data);
     if(!error)
     {
       this.especialistas.set(data!)

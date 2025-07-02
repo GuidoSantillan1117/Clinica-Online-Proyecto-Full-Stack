@@ -1,5 +1,5 @@
 <div class="container-fluid m-0 p-0 p-5 bg-light-grey">
-  <div class="border rounded bg-grey-blue p-5" style="min-height: 90%">
+  <div class="border rounded bg-grey-blue p-5" style="min-height: 100%">
     
     <div class="rounded d-flex align-items-center" style="height: 50%; background-image: url({{usuario?.foto_fondo}}); background-size: cover; background-position: center; background-repeat: no-repeat;">
       <div class="p-4" style="width: 20%;">
@@ -11,54 +11,59 @@
         </div>
       </div>
     </div>
-
-<div class="mt-5" *ngIf="mostrarHistorial">
-    <h1 class="mb-4 text-white">Historial de turnos</h1>
-    <table class="table table-dark table-bordered table-hover text-center align-middle">
-      <thead class="text-info">
-        <tr>
-          <th>Fecha</th>
-          <th>Especialidad</th>
-          <th>Diagnóstico</th>
-          <th>Comentario</th>
-          <th>Altura</th>
-          <th>Peso</th>
-          <th>Temperatura</th>
-          <th>Presión</th>
-          <th>Extra 1</th>
-          <th>Extra 2</th>
-          <th>Extra 3</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let turno of historialUsuario">
-          <td>{{ turno.fecha |titlecase }}</td>
-          <td>{{ turno.especialidad |titlecase }}</td>
-          <td>{{ turno.diagnostico |titlecase }}</td>
-          <td>{{ turno.comentario_especialista |titlecase }}</td>
-          <td>{{ turno.turnos_datos[0].altura }}</td>
-          <td>{{ turno.turnos_datos[0].peso  }}</td>
-          <td>{{ turno.turnos_datos[0].temperatura }}</td>
-          <td>{{ turno.turnos_datos[0].presion }}</td>
-          <td>{{turno.turnos_datos[0].dato_1?.clave || ''}}<br> {{turno.turnos_datos[0].dato_1?.valor || ''}}</td>
-          <td>{{turno.turnos_datos[0].dato_2?.clave || ''}}<br> {{turno.turnos_datos[0].dato_2?.valor || ''}}</td>
-          <td>{{turno.turnos_datos[0].dato_3?.clave || ''}} <br> {{turno.turnos_datos[0].dato_3?.valor || ''}}</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="d-flex" style="gap:20px" >
-
-      <button (click)="descargarPdfHistorial()"class="mt-4 btn btn-lg btn-danger text-white">Descargar historial</button>
-       <button (click)="descargarPdfFiltrado()"class="mt-4 btn btn-lg btn-danger text-white">Descargar historial por especialista</button>
+    <div *ngIf="usuario?.rol === 'paciente' && historialUsuario"class="d-flex flex-column align-items-center justify-content-center mt-4"style="min-height: 50%;">
+      
+    
+    <div class="mt-5 w-100" *ngIf="mostrarHistorial">
+        <h1 class="mb-4 text-white">Historial de turnos</h1>
+        <table class="table table-bordered table-hover text-center align-middle ">
+          <thead class="text-info">
+            <tr>
+              <th>Fecha</th>
+              <th>Especialidad</th>
+              <th>Diagnóstico</th>
+              <th>Comentario</th>
+              <th>Altura</th>
+              <th>Peso</th>
+              <th>Temperatura</th>
+              <th>Presión</th>
+              <th>Extra 1</th>
+              <th>Extra 2</th>
+              <th>Extra 3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let turno of historialUsuario">
+              <td>{{ turno.fecha |titlecase }}</td>
+              <td>{{ turno.especialidad |titlecase }}</td>
+              <td>{{ turno.diagnostico |titlecase }}</td>
+              <td>{{ turno.comentario_especialista |titlecase }}</td>
+              <td>{{ turno.turnos_datos[0].altura | pipeMedida:'altura' }}</td>
+              <td>{{ turno.turnos_datos[0].peso |pipeMedida:'peso'}}</td>
+              <td>{{ turno.turnos_datos[0].temperatura | pipeMedida:'temperatura' }}</td>
+              <td>{{ turno.turnos_datos[0].presion | pipeMedida:'presion' }}</td>
+              <td>{{turno.turnos_datos[0].dato_1?.clave || ''}}<br> {{turno.turnos_datos[0].dato_1?.valor || ''}}</td>
+              <td>{{turno.turnos_datos[0].dato_2?.clave || ''}}<br> {{turno.turnos_datos[0].dato_2?.valor || ''}}</td>
+              <td>{{turno.turnos_datos[0].dato_3?.clave || ''}} <br> {{turno.turnos_datos[0].dato_3?.valor || ''}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="d-flex" style="gap:20px" >
+          <button (click)="descargarPdfHistorial()"class="mt-4 btn btn-lg bg-sky text-white">Descargar historial</button>
+          <button (click)="descargarPdfFiltrado()"class="mt-4 btn btn-lg bg-sky text-white">Descargar historial por especialista</button>
+        </div>
+      </div>
+    <div class="mt-5 text-center">
+      <button (click)="cargarHistorial()" class="btn btn-primary btn-lg shadow">{{!mostrarHistorial ?  'Ver historial clínico'  : 'Cerrar historial'}}</button>
     </div>
   </div>
-  <div class="mt-5 text-center" *ngIf="usuario?.rol === 'paciente'">
-    <button (click)="cargarHistorial()" class="btn btn-primary btn-lg shadow">{{!mostrarHistorial ?  'Ver historial clínico'  : 'Cerrar historial'}}</button>
-  </div>
-  <h1 class='text-center my-4 text-white' *ngIf="usuario?.rol ==='especialista'">
-      Mis Horarios
-  </h1>
-  <div *ngIf="usuario?.rol==='especialista'"class="grid">
+  
+  <div *ngIf="usuario?.rol === 'especialista'"class="d-flex flex-column  justify-content-center mt-4"style="min-height: 50%;">
+    <h1 class='text-center my-4 text-white'>
+        Mis Horarios
+    </h1>
+
+  <div class="grid">
       <div class="row">
           <div *ngFor="let especialidad of listaEspecialidadesUsuario" class="col-3 p-3">
               <div [ngClass]="especialidad.coincide ? 'border border-danger': 'border'"
