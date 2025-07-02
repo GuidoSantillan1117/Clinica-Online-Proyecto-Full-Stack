@@ -52,13 +52,13 @@ export class PacientesComponent {
       }
     }
 
+    
+    console.log(pacientes);
+    this.pacientes.set(pacientes)
     if(this.pacientes().length === 0)
     {
       this.vacio = true;
     }
-
-    console.log(pacientes);
-    this.pacientes.set(pacientes)
 
   }
 
